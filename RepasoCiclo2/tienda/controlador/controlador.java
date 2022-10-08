@@ -4,6 +4,7 @@ import java.text.BreakIterator;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import modelos.venta;
 import tienda.vista.vista;
 
 public class controlador {
@@ -23,8 +24,18 @@ public class controlador {
                     ingresarVenta();
                     break;
                 case 2:
+                    System.out.println("Buscar venta");
+                    System.out.println("Ingrese el numero de venta");
+                    int numVenta = input.nextInt();  
+                    venta venta1 = buscarVenta(numVenta); //metodo buscar alimentado por numVenta                  
+                    if(venta1==null){
+                        System.out.println("No se encontró la venta");
+                    }else{
+                        vista.verBuscado(venta1); //llama al metodo verBuscado de la clase vista y le pasa como parametro venta1
+                    }
                     buscarVenta();
                     break;
+
                 case 3:
                     modificarVenta();
                     break;
@@ -115,4 +126,26 @@ public class controlador {
         System.out.println("Venta ingresada con éxito");
 
     }
-}
+
+    //metodo buscar venta1
+    // public static venta buscarVenta(int numeroVenta){ //recibe como parametro el numero de venta que se va a buscar
+    //     venta ventaEncontrada = null; //crea un objeto de tipo venta y lo inicializa en null
+    //     for(venta venta1: ventas){ //recorre la lista de ventas
+    //         if(venta1.getNumeroVenta() == numeroVenta){ //verifica si el numero de venta que se esta recorriendo es igual al numero de venta que se esta buscando
+    //             ventaEncontrada = venta1; //si es igual, asigna el objeto venta1 a la variable ventaEncontrada
+    //             break; //rompe el ciclo for
+    //         }
+    //     }
+    //     return ventaEncontrada; //devuelve el objeto venta encontrado
+    // }
+    //metodo buscar venta2
+    public static void buscarVenta(int numeroVenta){
+        venta resultado= null;
+        for(int i=0; i<ventas.size(); i++){
+            if(ventas.get(i).getNumeroVenta() == numeroVenta){
+                System.out.println("Venta encontrada");
+                resultado = ventas.get(i);
+                break;
+            }
+        }
+    }
