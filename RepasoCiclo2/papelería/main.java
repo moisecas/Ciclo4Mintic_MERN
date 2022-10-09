@@ -7,7 +7,7 @@ package papelería;
 
 public class main {
     public static int [] sumaEdades(int [] edades){ //devolución de un arreglo, recibe un arreglo de enteros
-        
+         
         //la edad menor
         int edadMenor = edades[0]; //voy a guardar la edad menor en la posición 0, desde la posición 0 voy a comparar 
         //for para recorrer

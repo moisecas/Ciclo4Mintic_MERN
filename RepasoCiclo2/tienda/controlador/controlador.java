@@ -4,6 +4,8 @@ import java.text.BreakIterator;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import javax.lang.model.util.ElementScanner14;
+
 import modelos.venta;
 import tienda.vista.vista;
 
@@ -147,5 +149,99 @@ public class controlador {
                 resultado = ventas.get(i);
                 break;
             }
+        }
+
+
+    }
+
+    //metodo modificar venta
+    // public void modificarVenta(){
+    //     System.out.println("Ingrese el numero de venta que desea modificar");
+    //     int numeroVenta = input.nextInt();
+    //     input.nextLine();
+    //     venta venta1 = buscarVenta(numeroVenta); //llama al metodo buscarVenta y le pasa como parametro el numero de venta que se va a buscar
+    //     if(venta1 == null){ //verifica si el objeto venta1 es null
+    //         System.out.println("No se encontró la venta");
+    //     }else{
+    //         System.out.println("Ingrese el nuevo numero de venta");
+    //         int nuevoNumeroVenta = input.nextInt();
+    //         input.nextLine();
+    //         System.out.println("Ingrese el nuevo nombre del cliente");
+    //         String nuevoNombreCliente = input.nextLine();
+    //         System.out.println("Ingrese el nuevo producto comprado");
+    //         String nuevoProducto = input.nextLine();
+    //         System.out.println("Ingrese el nuevo precio del producto");
+    //         double nuevoPrecio = input.nextDouble();
+    //         System.out.println("Ingrese la nueva cantidad de productos");
+    //         int nuevaCantidad = input.nextInt();
+    //         input.nextLine();
+    //         System.out.println("Ingrese el nuevo nombre del vendedor");
+    //         String nuevoNombreVendedor = input.nextLine();
+    //         venta1.setNumeroVenta(nuevoNumeroVenta);
+    //         venta1.setNombreCliente(nuevoNombreCliente);
+    //         venta1.setProducto(nuevoProducto);
+    //         venta1.setPrecio(nuevoPrecio);
+    //         venta1.setCantidad(nuevaCantidad);
+    //         venta1.setNombreVendedor(nuevoNombreVendedor);
+    //         System.out.println("Venta modificada con éxito");
+    //     }
+    // }
+
+    //metodo modificar venta2
+    public void modificarVenta(){
+        System.out.println("Ingrese el numero de venta que desea modificar");
+        int numeroVenta = input.nextInt();
+        input.nextLine();
+        venta aModificar = buscarVenta(numeroVenta);
+        if(aModificar != null){ 
+            System.out.println("Ingrese el nombre del cliente: ");
+            String cliente = input.nextLine(); //lee el nombre del cliente
+
+            System.out.println("Ingrese el producto comprado: ");
+            String producto = input.nextLine(); //lee el producto comprado
+
+            System.out.println("Ingrese el precio del producto: ");
+            Double precio = input.nextDouble(); //lee el precio del producto
+
+            System.out.println("Ingrese la cantidad de productos: ");
+            int cantidad = input.nextInt(); //lee la cantidad de productos
+            input.nextLine();
+
+            System.out.println("Ingrese el nombre del vendedor: ");
+            String vendedor = input.nextLine(); //lee el nombre del vendedor
+
+            for (int i =0; i<ventas.size(); i++){ //recorre la lista de ventas para buscar la venta que se va a modificar
+                if(ventas.get(i).getNumeroVenta() == numeroVenta){ //en la posición de la lista en la que se encuentra la venta que se va a modificar
+                    ventas.get(i).setCliente(cliente); //se modifica el nombre del cliente
+                    ventas.get(i).setProducto(producto); //se modifica el producto comprado
+                    ventas.get(i).setPrecio(precio);
+                    ventas.get(i).setCantidad(cantidad);
+                    ventas.get(i).setNombreVendedor(vendedor);
+                    System.out.println("Venta modificada con éxito");
+                    break;
+                }
+            }
+
+
+        }else{
+            System.out.println("No se encontró la venta");
+        }
+            
+    }
+
+    //metodo eliminar venta
+    public void eliminarVenta(){
+        System.out.println("Ingrese el numero de venta que desea eliminar");
+        int numeroVenta = input.nextInt();
+        input.nextLine();
+        venta venta1 = buscarVenta(numeroVenta); //llama al metodo buscarVenta y le pasa como parametro el numero de venta que se va a buscar
+        if(venta1 == null){ //verifica si el objeto venta1 es null
+            System.out.println("No se encontró la venta");
+        }else{
+            ventas.remove(venta1); //elimina el objeto venta1 de la lista de ventas
+            System.out.println("Venta eliminada con éxito");
+        }
+        else{
+            System.out.println("No se encontró la venta");
         }
     }
