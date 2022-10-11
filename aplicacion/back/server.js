@@ -16,3 +16,5 @@ const server=app.listen(process.env.PORT, () => {
     console.log(`Servidor iniciado en el puerto: ${process.env.PORT} en modo: ${process.env.NODE_ENV}`)
 })
 
+
+//lanzo con npm start en la consola desde el directorio aplicacion
