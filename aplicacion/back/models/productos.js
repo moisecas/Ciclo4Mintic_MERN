@@ -59,8 +59,46 @@ const productosSchema = new mongoose.Schema({
     vendedor: {
         type: String,
         required: [true, 'Por favor ingrese el vendedor del producto']
+    },
+    inventario: {
+        type: Number,
+        required: [true, 'Por favor ingrese el stock del producto'],
+        maxlength: [5, 'El stock del producto no puede tener mas de 5 caracteres'],
+        default: 0 //valor por defecto, eliminar la posibilidad del error de que no se ingrese un stock
+
+    }, 
+    numCalificaciones: {
+        type: Number,
+        default: 0 //valor por defecto, eliminar la posibilidad del error de que no se ingrese un numero de calificaciones
+
+    },
+    opiniones:[ //array de opiniones
+        {
+            nombreCliente:{
+                type: String,
+                required: true
+            },
+            rating:{
+                type: Number,
+                required: true
+            },
+            comentario:{
+                type: String,
+                required: true 
+            } //comentario del cliente
+
+        }
+    ],
+    fechaCreacion: {
+        type: Date,
+        default: Date.now //fecha de creacion del producto
+
     }
 
     
 
 })//creamos el schema, es la estructura de la base de datos
+
+module.exports = mongoose.model('productos', productosSchema); //exportamos el modulo para que pueda ser usado. Exportado como modelo de mongoose. 'productos' es el nombre del modelo, productosSchema es el schema
+//exportelo como modelo de moonose y se alimenta de productosSchema 
+

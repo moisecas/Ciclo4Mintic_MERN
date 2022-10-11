@@ -7,6 +7,6 @@ app.use(express.json()); //para poder usar json en el body
 const products = require('./routes/products'); //importamos el archivo de rutas de productos
 
 //creamos las rutas
-app.use('/api/v1', products); //creamos la ruta, use es para usar, /api/v1 es la ruta, products es el archivo de rutas
+app.use('/api', products); //creamos la ruta
 
 module.exports = app; //exportamos el modulo
