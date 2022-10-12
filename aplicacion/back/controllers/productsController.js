@@ -1,15 +1,69 @@
+//acá va toda la funcionalidad crud lo que pasa con el schema de productos 
+
 const producto = require('../models/productos'); //importamos el modelo de productos
 
 
 //ver lista de productos 
-exports.getProducts = (req, res, next) => { //trabaja con un requisito, una respuesta y un next, ejecute una acción al terminar
-    res.status(200).json({  //status 200 es que todo esta bien, json es un objeto, getmapping 
+exports.getProducts = async (req, res, next) => { //trabaja con un requisito, una respuesta y un next, ejecute una acción al terminar
+    
+    const productos = await producto.find(); //buscamos todos los productos con el modelo de productos, devolución de la promesa
+    //sabe que es una entidad y puedo interacturar con ella, producto es el modelo de productos, find es un método de mongoose, devuelve una promesa
+
+    res.status(200).json({  //status 200 es que todo esta bien, json es un objeto, getmapping, convierte el objeto en json
         success: true,
+        count: productos.length, //cuantos productos hay
+        productos, //productos que encontramos
         message: 'Mostrar todos los productos'
     })//status 200 es que todo esta bien, json es que vamos a enviar un json
 }
 
-//acá va toda la funcionalidad crud lo que pasa con el schema de productos 
+
+//consulta por id
+exports.getProductById = async (req, res, next) => {
+    const product = await producto.findById(req.params.id); //buscamos un producto por id, el req.params.id es el id que viene por la url, corresponde al producto que busco
+    //debe llamarse product diferente al declarado al inicio, del req busque un parametro params que va por id. 
+    //si existe o no
+    if(!product){//si no existe el producto
+        return res.status(404).json({ //res status 404 es que no se encontro el recurso, json es un objeto
+            success: false, //no se encontro el producto
+            message: 'Producto no encontrado' //mensaje de error al no encontrar el producto 
+        }) //respondo con un status 404 que es que no se encontro el recurso, json es un objeto
+
+    }
+    res.status(200).json({
+        success: true,
+        message: 'Mostrar producto',
+        product
+
+    }) //res status 200 es que todo esta bien, json es un objeto
+
+} //trabaja con un requisito, una respuesta y un next, ejecute una acción al terminar
+
+//actualizar producto
+exports.updateProduct = async (req, res, next) => { //async para que sea asincrono, req es el request, res es la respuesta, next es para que ejecute una acción al terminar
+    let product = await producto.findById(req.params.id); //buscamos un producto por id, el req.params.id es el id que viene por la url, corresponde al producto que busco
+
+    if(!product){//si no existe el producto
+        return res.status(404).json({
+            success: false,
+            message: 'Producto no encontrado'
+
+        }) //res status 404 es que no se encontro el recurso, json es un objeto
+    }
+
+    product = await producto.findByIdAndUpdate(req.params.id, req.body, { //el metodo necesita el id, el body que viene del front, y un objeto con las opciones
+        new: true, //devuelve el producto actualizado
+        runValidators: true //corre las validaciones del modelo
+    }) //actualizamos el producto, el req.params.id es el id que viene por la url, corresponde al producto que busco, el req.body es lo que viene del front, el {new: true, runValidators: true} es para que devuelva el producto actualizado y que corra las validaciones
+    res.status(200).json({
+        success: true,
+        message: 'Producto actualizado',
+        product  //producto actualizado 
+    }) //res status 200 es que todo esta bien, json es un objeto
+}
+
+
+
 
 //crear nuevo producto => /api/v1/producto/nuevo
 exports.newProduct = async (req, res, next) => { //req es el request, res es la respuesta, next es para que ejecute una acción al terminar

@@ -9,4 +9,4 @@ const products = require('./routes/products'); //importamos el archivo de rutas 
 //creamos las rutas
 app.use('/api', products); //creamos la ruta
 
-module.exports = app; //exportamos el modulo
+module.exports = app; //exportamos el modulo 
