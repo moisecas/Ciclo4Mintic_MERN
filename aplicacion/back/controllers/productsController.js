@@ -1,7 +1,7 @@
 //acá va toda la funcionalidad crud lo que pasa con el schema de productos 
 
 const producto = require('../models/productos'); //importamos el modelo de productos
-
+const fetch =(url)=>import('node-fetch').then(({default:fetch})=>fetch(url)); //importamos el fetch de node-fetch 
 
 //ver lista de productos 
 exports.getProducts = async (req, res, next) => { //trabaja con un requisito, una respuesta y un next, ejecute una acción al terminar
@@ -91,3 +91,27 @@ exports.newProduct = async (req, res, next) => { //req es el request, res es la 
     }) //status 201 es que se creo un nuevo recurso
 } //trabaja con un requisito, una respuesta y un next, ejecute una acción al terminar
 //promesa para crear un nuevo producto espero que se cree y luego lo muestro en la consola
+
+
+//Metodo fetch 
+
+//para traer los productos
+function fetchProducts() {
+    fetch('http://localhost:4000/api/productos') //fetch es una función de js, fetch('/api/productos') es la url que voy a consumir
+    .then(res => res.json()) //promesa, convierte la respuesta en json, con esa info arme la respuesta
+    .then(data => { //promesa, data es el json que viene de la respuesta
+        console.log(data) //muestro en la consola el json que viene de la respuesta
+    })
+    .catch(err => console.log(err)) //promesa, si hay un error lo muestro en la consola 
+}
+//fetchProducts() //ejecuto la función fetchProducts para que me traiga los productos de la api
+
+//para traer un producto por id
+function verProductoPorID(id){
+    fetch('http://localhost:4000/api/producto/'+id)
+    .then(res=>res.json())
+    .then(res=>console.log(res))
+    .catch(err=>console.error(err))
+} 
+
+verProductoPorID('6345d5f757cd66bbd7318dd5') //ejecuto la función fetchProduct para que me traiga el producto de la api
