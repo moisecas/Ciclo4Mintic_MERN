@@ -63,6 +63,23 @@ exports.updateProduct = async (req, res, next) => { //async para que sea asincro
 }
 
 
+//eliminar producto
+exports.deleteProduct = async (req, res, next) => { //async para que sea asincrono, req es el request, res es la respuesta, next es para que ejecute una acción al terminar
+    const product = await producto.findById(req.params.id); //buscamos un producto por id, el req.params.id es el id que viene por la url, corresponde al producto que busco
+
+    if(!product){//si no existe el producto
+        return res.status(404).json({
+            success: false,
+            message: 'Producto no encontrado'
+
+        }) //res status 404 es que no se encontro el recurso, json es un objeto
+    }
+    await product.remove(); //eliminamos el producto, remove() es un método de mongoose que elimina el producto
+    res.status(200).json({
+        success: true,
+        message: 'Producto eliminado' //mensaje de producto eliminado
+    }) //res status 200 es que todo esta bien, json es un objeto
+}   
 
 
 //crear nuevo producto => /api/v1/producto/nuevo
