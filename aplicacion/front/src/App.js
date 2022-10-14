@@ -1,13 +1,22 @@
-
 import './App.css';
-import React from 'react';  
+import React from 'react';
+import Header from './components/layout/Header';
+import Footer from './components/layout/Footer';
+
+
 
 function App() {
   return (
-  <div className="App">
-  <h1>TechcenterColombia</h1>
-  <img src="./images/logo.jpg" alt="Aqui va el logo"></img>
-  </div>
+    <div className="App">
+        <Header />
+        <center>Contenido</center>
+        <center>Contenido</center>
+        <center>Contenido</center>
+        <center>Contenido</center>
+        <center>Contenido</center>
+        <center>Contenido</center>
+        <Footer/>
+    </div>
   );
 }
 
