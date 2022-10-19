@@ -1,8 +1,17 @@
-import React, { Fragment } from 'react'
+import React, { Fragment,useEffect } from 'react'
+import MetaData from './layout/MetaData'
+import { useDispatch } from 'react-redux'
+import { getProducts } from '../actions/productActions'
 
 const Home = () => {
+    const dispatch = useDispatch()
+    useEffect(() => { //useEffect es un hook de react que se ejecuta cuando el componente se monta
+        dispatch(getProducts()) //ejecutar la accion de obtener productos
+    }, [dispatch]) //ver como un arregle el dispatch es un parametro que se pasa a la funcion
+
   return (
     <Fragment>
+    <MetaData title="Skins para personalizar" ></MetaData>
         <h1 id='encabezado_productos text-center'>Últimos productos</h1> 
         <section id='productos' className='container mt-5'>
             <div className='row'>
@@ -87,4 +96,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default Home 
