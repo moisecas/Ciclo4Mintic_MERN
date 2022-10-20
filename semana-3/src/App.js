@@ -1,24 +1,20 @@
 
-import './App.css';
+import React from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Formulario from './components/Formulario';
+import Header from './components/Header';
+import Info from './components/Info';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <h1>React App</h1>
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+   
+      <Header/>
+      <Formulario/>
+      <Info/> 
     </div>
+
+   
   );
 }
 
