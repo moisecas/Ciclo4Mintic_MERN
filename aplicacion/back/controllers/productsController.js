@@ -9,6 +9,13 @@ exports.getProducts = async (req, res, next) => { //trabaja con un requisito, un
     const productos = await producto.find(); //buscamos todos los productos con el modelo de productos, devolución de la promesa
     //sabe que es una entidad y puedo interacturar con ella, producto es el modelo de productos, find es un método de mongoose, devuelve una promesa
 
+    if (!productos){
+        return res.status(404).json({
+            success:false,
+            error:true
+        })
+    } //si no hay productos, respondo con un status 404 que es que no se encontro el recurso, json es un objeto
+
     res.status(200).json({  //status 200 es que todo esta bien, json es un objeto, getmapping, convierte el objeto en json
         success: true,
         count: productos.length, //cuantos productos hay

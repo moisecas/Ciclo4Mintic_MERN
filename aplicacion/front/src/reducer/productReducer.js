@@ -9,7 +9,7 @@ export const productReducer = (state = { products: [] }, action) => { //producto
         case ALL_PRODUCTS_REQUEST:
             return { //retornar el estado actual, me regrese el estado actual
                 loading: true,
-                products: [] //paquete de productos vacio, apenas se inicia la peticion, si algo ocurre se va a llenar
+                productos: [] //paquete de productos vacio, apenas se inicia la peticion, si algo ocurre se va a llenar
             }
         case ALL_PRODUCTS_SUCCESS:
             return {
