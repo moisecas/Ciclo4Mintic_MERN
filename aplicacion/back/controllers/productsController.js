@@ -31,9 +31,10 @@ exports.getProductById = async (req, res, next) => {
     //debe llamarse product diferente al declarado al inicio, del req busque un parametro params que va por id. 
     //si existe o no
     if(!product){//si no existe el producto
-        return res.status(404).json({ //res status 404 es que no se encontro el recurso, json es un objeto
+            return res.status(404).json({ //res status 404 es que no se encontro el recurso, json es un objeto
             success: false, //no se encontro el producto
-            message: 'Producto no encontrado' //mensaje de error al no encontrar el producto 
+            message: 'Producto no encontrado', //mensaje de error al no encontrar el producto 
+            error:true 
         }) //respondo con un status 404 que es que no se encontro el recurso, json es un objeto
 
     }

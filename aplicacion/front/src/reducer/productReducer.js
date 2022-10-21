@@ -1,34 +1,73 @@
-import { ALL_PRODUCTS_REQUEST,
-    ALL_PRODUCTS_SUCCESS,
+import { ALL_PRODUCTS_REQUEST, 
+    ALL_PRODUCTS_SUCCESS, 
     ALL_PRODUCTS_FAIL,
-    CLEAR_ERRORS
-} from "../constants/productConstants";
+    PRODUCT_DETAILS_REQUEST,
+    PRODUCT_DETAILS_SUCCESS,
+    PRODUCT_DETAILS_FAIL,
+    CLEAR_ERRORS} from "../constants/productConstants";
 
-export const productReducer = (state = { products: [] }, action) => { //productos de mi base de datos que vienen en un diccionario
-    switch (action.type) { //accion a ejecutar dependiendo del tipo de accion, posible accion a ejecutarse
+export const productsReducer = (state ={ products: []}, action)=>{
+    switch(action.type){
         case ALL_PRODUCTS_REQUEST:
-            return { //retornar el estado actual, me regrese el estado actual
-                loading: true,
-                productos: [] //paquete de productos vacio, apenas se inicia la peticion, si algo ocurre se va a llenar
+            return{
+                loading:true,
+                productos:[]
             }
+
         case ALL_PRODUCTS_SUCCESS:
-            return {
-                loading: false,
-                productos: action.payload.productos, //paquete de productos lleno, si la peticion es exitosa se va a llenar
-                count: action.payload.count //cantidad de productos
-               
+            return{
+                loading:false,
+                productos: action.payload.productos,
+                count: action.payload.count
             }
+
         case ALL_PRODUCTS_FAIL:
-            return { //mensaje que me diga que paso con la peticion
-                loading: false,
-                error: action.payload //mensaje de error
+            return{
+                loading:false,
+                error: action.payload
             }
+
         case CLEAR_ERRORS:
-            return {
+            return{
                 ...state,
-                error: null
+                error:null
             }
+        
+
         default:
-            return state; //retornar el estado actual, estado por defecto
+            return state;
+    }
+}
+
+//REDUCER PARA TENER TODOS LOS DETALLES
+export const productDetailsReducer = (state ={ product: {}}, action)=>{
+    switch(action.type){
+        case PRODUCT_DETAILS_REQUEST:
+            return{
+                ...state,
+                loading:true
+            }
+
+        case PRODUCT_DETAILS_SUCCESS:
+            return{
+                loading:false,
+                product: action.payload.product,
+            }
+
+        case PRODUCT_DETAILS_FAIL:
+            return{
+                ...state,
+                error: action.payload
+            }
+
+        case CLEAR_ERRORS:
+            return{
+                ...state,
+                error:null
+            }
+        
+
+        default:
+            return state;
     }
 }

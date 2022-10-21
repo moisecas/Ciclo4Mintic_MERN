@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom' //para poder usar el link de react route
 
 const Home = () => {
 
-    const { loading,productos,error } = useSelector(state => state.products) //trae los valores de los estados que estan en el front
+    const { loading, productos } = useSelector(state => state.products) //trae los valores de los estados que estan en el front
    
     //const alert = useAlert()  //lo inicializo 
 
@@ -24,7 +24,7 @@ const Home = () => {
 
   return (
     <Fragment>
-    {loading ? <i class="fa fa-refresh fa-spin fa-3x fa-fw">Cargando</i> : ( //si esta cargando muestra el mensaje loading si no muestra el fragment de abajo 
+    {loading ? <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i> : ( //si esta cargando muestra el mensaje loading si no muestra el fragment de abajo 
         <Fragment>
         <MetaData title="Skins para personalizar" ></MetaData>
         <h1 id='encabezado_productos text-center'>Últimos productos</h1> 
