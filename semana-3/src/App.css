@@ -1,0 +1,36 @@
+.container{ 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 20 auto;
+    width: 100%;
+    height: 100%;
+    margin-top: 10%;
+       
+    
+}
+
+.containernav{
+    
+    display: flex;
+   
+    align-items: center;
+    justify-content: center;
+    margin: 20 auto;
+    width: 100%;
+    height: 80%;
+    margin-top: 10%;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    padding: 20px;
+    margin-bottom: 20px;
+
+    
+ 
+    
+    
+    
+   
+}

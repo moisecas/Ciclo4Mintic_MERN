@@ -4,6 +4,7 @@ import Table from 'react-bootstrap/Table';
 const Info = () => {
   return (
     <Fragment>
+    <div className="container">
       <Table striped bordered hover>
       <thead>
         <tr>
@@ -33,6 +34,7 @@ const Info = () => {
         </tr>
       </tbody>
     </Table>
+    </div>
   );
 
     </Fragment>
