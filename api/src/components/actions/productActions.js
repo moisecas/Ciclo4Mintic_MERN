@@ -16,3 +16,4 @@ function mostrarProductosHTML(){
     document.getElementById('productos').innerHTML = html
 }
 mostrarProductosHTML()
+
