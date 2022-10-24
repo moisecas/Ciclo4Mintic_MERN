@@ -25,6 +25,19 @@ const Verproductos = () => {
         }
 
     ]
+    function agregarMostrar(id){
+        let html = `
+        <div className="card" style="width: 18rem;">
+            <img src="${items[id].image}" alt="imagen"/>
+            <div className="card-body">
+                <h5 className="card-title">${items[id].nombre}</h5>
+                <p className="card-text">${items[id].descripcion}</p>
+                <a href="#" className="btn btn-primary">${items[id].precio}</a>
+            </div>
+        </div>
+        `
+        document.getElementById('productos').innerHTML = html
+    }
 
     
     
@@ -39,13 +52,15 @@ const Verproductos = () => {
                     <h5 className="card-title">{item.nombre}</h5>
                     <p className="card-text">{item.descripcion}</p>
                     <a href="#" className="btn btn-primary">{item.precio}</a>
-                    <input type='submit' value='Agregar'  />
+                    <input type='submit' value='Agregar' onClick={agregarMostrar} /> 
                 </div>
             </div>
         ))}
     </div>
     <div id='productos' className='productos'>
     </div>
+    <h2>Carrito</h2>
+    <ul id='foo'> </ul>
     </Fragment>
   )
 }

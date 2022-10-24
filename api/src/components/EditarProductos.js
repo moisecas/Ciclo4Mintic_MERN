@@ -17,7 +17,19 @@ const EditarProductos = () => {
         
 
     } 
+    function agregarElementos(){
+        var lista = document.getElementById('foo');
+        items.forEach(function(data){
+            var li = document.createElement('li');
+            li.innerHTML = data.id + ' ' + data.nombre + ' ' + data.descripcion + ' ' + data.precio + ' ' + data.image;
+            lista.appendChild(li);
+        })
 
+       
+    } 
+    
+
+    
    
     
     
@@ -38,24 +50,12 @@ const EditarProductos = () => {
         <label>imagen</label>
         <input type='text'  id='imagen' />
         <input type='submit' onClick={editarItems} />
+        <button onClick={agregarElementos}>Mostrar</button> 
+        
         
     </div>
-    <div className='products'>
-        {items && items.map(item => (
-            <div className="card" style={{width: '18rem'}} key={item.id} id='idItem' >
-                <img src={item.image} className="card-img-top" alt="..."/>
-                <div className="card-body">
-                    <h5 className="card-title">{item.nombre}</h5>
-                    <p className="card-text">{item.descripcion}</p>
-                    <a href="#" className="btn btn-primary">{item.precio}</a>
-                    <input type='submit' value='Agregar'  />
-                </div>
-            </div>
-        
-
-            
-        ))}
-    </div>
+    <ul id='foo'></ul>
+    
             
     
     </Fragment>
