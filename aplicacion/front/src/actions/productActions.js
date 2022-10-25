@@ -1,41 +1,39 @@
 import axios from 'axios';
 
-import { ALL_PRODUCTS_REQUEST,
+import {
+    ALL_PRODUCTS_REQUEST,
     ALL_PRODUCTS_SUCCESS,
     ALL_PRODUCTS_FAIL,
     PRODUCT_DETAILS_REQUEST,
     PRODUCT_DETAILS_SUCCESS,
     PRODUCT_DETAILS_FAIL,
     CLEAR_ERRORS
-} from "../constants/productConstants"; 
+} from '../constants/productConstants';
 
-// Get all products
-export const getProducts = (keyword = '', currentPage = 1, price, category, rating = 0) => async (dispatch) => { //dispatch es una funcion que me permite ejecutar una accion
-    try { //intente hacer esto
-        dispatch({ type: ALL_PRODUCTS_REQUEST }); //ejecutar la accion de tipo ALL_PRODUCTS_REQUEST
+export const getProducts = () => async(dispatch)=>{
+    try {
+        dispatch({type: ALL_PRODUCTS_REQUEST})
 
-        const {data} = await axios.get('api/productos') //obtener los productos de la base de datos')
+        const {data} = await axios.get('api/productos')
 
-        dispatch({ //ejecutar la accion de tipo ALL_PRODUCTS_SUCCESS
-            type: ALL_PRODUCTS_SUCCESS,
-            payload: data //paquete de productos
-        })
-
-        
-    }catch(error){
         dispatch({
-            type: ALL_PRODUCTS_FAIL,
-            payload: error.response.data.message //mensaje de error
-        }) //ejecutar la accion de tipo ALL_PRODUCTS_FAIL
-    } //si algo sale mal haga esto 
+            type:ALL_PRODUCTS_SUCCESS,
+            payload: data
+        })
+    }catch (error){
+        dispatch({
+            type:ALL_PRODUCTS_FAIL,
+            payload: error.response.data.message
+        })
+    }
 }
 
-// Get product details
+//VER DETALLE DEL PRODUCTO
 export const getProductDetails = (id) => async(dispatch)=>{
     try {
         dispatch({type: PRODUCT_DETAILS_REQUEST})
 
-        const {data} = await axios.get(`api/producto/:${id}`)
+        const {data} = await axios.get(`/api/producto/${id}`)
 
         dispatch({
             type:PRODUCT_DETAILS_SUCCESS,
@@ -48,6 +46,7 @@ export const getProductDetails = (id) => async(dispatch)=>{
         })
     }
 }
+
 
 
 // Clear errors

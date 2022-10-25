@@ -12,7 +12,7 @@ const options = { //opciones para el template de react-alert para poder usarlo p
     transition: transitions.SCALE //transicion de la alerta
 } //opciones para el template de react-alert
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
+const root = ReactDOM.createRoot(document.getElementById('root')); // creamos el root de react-dom
 root.render(
   <Provider store={store}> {/* proveedor de redux, se alimenta de la tienda que importamos */}
     <AlertProvider template={AlertTemplate} {...options}> {/* se alimentan de options, proveedor de react-alert, se alimenta del template que importamos y las opciones que creamos */}

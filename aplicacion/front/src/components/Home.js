@@ -26,7 +26,7 @@ const Home = () => {
     <Fragment>
     {loading ? <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i> : ( //si esta cargando muestra el mensaje loading si no muestra el fragment de abajo 
         <Fragment>
-        <MetaData title="Skins para personalizar" ></MetaData>
+        <MetaData title="Skins para personalcaizar" ></MetaData>
         <h1 id='encabezado_productos text-center'>Últimos productos</h1> 
         <section id="productos" className='container mt-5'>
                 <div className='row'>
@@ -63,3 +63,6 @@ const Home = () => {
 }
 
 export default Home 
+
+
+
