@@ -12,10 +12,7 @@ exports.getProducts = catchAsyncErrors (async (req, res, next) => { //trabaja co
     //sabe que es una entidad y puedo interacturar con ella, producto es el modelo de productos, find es un método de mongoose, devuelve una promesa
 
     if (!productos){
-        return res.status(404).json({
-            success:false,
-            error:true
-        })
+        return next(new ErrorHandler("Informacion no encontrada", 404))
     } //si no hay productos, respondo con un status 404 que es que no se encontro el recurso, json es un objeto
 
     res.status(200).json({  //status 200 es que todo esta bien, json es un objeto, getmapping, convierte el objeto en json
@@ -50,12 +47,8 @@ exports.getProductById = catchAsyncErrors(async (req, res, next) => { //async pa
 exports.updateProduct = catchAsyncErrors (async (req, res, next) => { //async para que sea asincrono, req es el request, res es la respuesta, next es para que ejecute una acción al terminar
     let product = await producto.findById(req.params.id); //buscamos un producto por id, el req.params.id es el id que viene por la url, corresponde al producto que busco
 
-    if(!product){//si no existe el producto
-        return res.status(404).json({
-            success: false,
-            message: 'Producto no encontrado'
-
-        }) //res status 404 es que no se encontro el recurso, json es un objeto
+    if (!product){
+        return next(new ErrorHandler("Producto no encontrado", 404))
     }
 
     product = await producto.findByIdAndUpdate(req.params.id, req.body, { //el metodo necesita el id, el body que viene del front, y un objeto con las opciones
@@ -74,13 +67,10 @@ exports.updateProduct = catchAsyncErrors (async (req, res, next) => { //async pa
 exports.deleteProduct = catchAsyncErrors (async (req, res, next) => { //async para que sea asincrono, req es el request, res es la respuesta, next es para que ejecute una acción al terminar
     const product = await producto.findById(req.params.id); //buscamos un producto por id, el req.params.id es el id que viene por la url, corresponde al producto que busco
 
-    if(!product){//si no existe el producto
-        return res.status(404).json({
-            success: false,
-            message: 'Producto no encontrado'
-
-        }) //res status 404 es que no se encontro el recurso, json es un objeto
+    if (!product){
+        return next(new ErrorHandler("Producto no encontrado", 404))
     }
+    
     await product.remove(); //eliminamos el producto, remove() es un método de mongoose que elimina el producto
     res.status(200).json({
         success: true,
