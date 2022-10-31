@@ -20,7 +20,7 @@ export const Sidebar = () => {
                             </li>
 
                             <li>
-                                <Link to="/nuevoProducto"><i className="fa fa-plus"></i> Crear</Link>
+                                <Link to="/newProduct"><i className="fa fa-plus"></i> Crear</Link>
                             </li>
                         </ul>
                     </li>
