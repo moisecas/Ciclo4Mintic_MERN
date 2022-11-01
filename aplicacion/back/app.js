@@ -1,8 +1,10 @@
 const express = require('express');
 const app = express(); 
 const errorMiddleware = require('./middleware/errors'); //importo el middleware de errores
+const cookieParser = require('cookie-parser'); //importo el middleware de cookies
 
 app.use(express.json()); //para poder usar json en el body
+app.use(cookieParser()); //para poder usar cookies
 
 //importamos las rutas
 const products = require('./routes/products'); //importamos el archivo de rutas de productos

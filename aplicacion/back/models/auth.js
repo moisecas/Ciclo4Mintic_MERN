@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken'); //herramienta para generar tokens
 
 const usuarioSchema = new mongoose.Schema({
     nombre: {
@@ -55,6 +56,20 @@ usuarioSchema.pre('save', async function (next) { //metodo para el modelo de usu
         this.password = await bcrypt.hash(this.password, 10); //encripta el password, valor que se va a encriptar, numero de vueltas que se le va a dar al algoritmo de encriptacion
 }) //antes de guardar el usuario, ejecuta una funcion
 
-module.exports = mongoose.model('auth', usuarioSchema); //exporto el modelo
+
+//return jwt token
+usuarioSchema.methods.getJwtToken = function () { //metodo para generar el token, llamamos a methods porque es un metodo del modelo
+    return jwt.sign({ id: this._id }, process.env.JWT_SECRET, { //recibe un id para identificar el usuario, retorna la herramienta jwt, recurso sing, genera el token, recibe el id del usuario, la palabra secreta, y el tiempo de expiracion del token
+        expiresIn: process.env.JWT_EXPIRES_TIME  //Tiempo de expiracion del token
+    })
+}
+
+//compare user password
+usuarioSchema.methods.compararPass = async function (passDada){
+    return await bcrypt.compare(passDada, this.password)
+} //bcrypt.compare compara el password ingresado con el password encriptado, compare es un metodo de bcrypt
+
+module.exports = mongoose.model("auth", usuarioSchema); //exporto el modelo
+
 
 
