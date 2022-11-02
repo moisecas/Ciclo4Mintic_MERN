@@ -81,6 +81,9 @@ exports.deleteProduct = catchAsyncErrors (async (req, res, next) => { //async pa
 
 //crear nuevo producto => /api/v1/producto/nuevo
 exports.newProduct =  catchAsyncErrors( async (req, res, next) => { //req es el request, res es la respuesta, next es para que ejecute una acción al terminar
+    
+    req.body.user = req.user.id; //el usuario que creo el producto es el usuario que esta logueado, req.user.id es el id del usuario que esta logueado
+
     const product = await producto.create(req.body); //el req que traemos del front, body es el cuerpo del request, creamos un producto con el modelo de productos, el req.body es lo que viene del front
     res.status(201).json({ //respondo con un status 201 que es que se creo un nuevo recurso, json es un objeto y con el producto que creamos
         success: true,

@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken'); //herramienta para generar tokens
+const crypto = require('crypto'); //herramienta para encriptar el password, tiene mas opciones
 
 const usuarioSchema = new mongoose.Schema({
     nombre: {
@@ -68,6 +69,20 @@ usuarioSchema.methods.getJwtToken = function () { //metodo para generar el token
 usuarioSchema.methods.compararPass = async function (passDada){
     return await bcrypt.compare(passDada, this.password)
 } //bcrypt.compare compara el password ingresado con el password encriptado, compare es un metodo de bcrypt
+
+//generar token para resetear password
+usuarioSchema.methods.genResetPasswordToken = function () {
+    //generar token
+    const resetToken = crypto.randomBytes(20).toString('hex'); //genera un token aleatorio de 20 caracteres hex, randomBytes es un metodo de crypto, toString convierte el token en un string
+
+    //hash y setear el token, hash es un metodo de crypto que encripta el token generado
+    this.resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex'); //encripta el token generado, use el metodo sha256, update actualiza el token, digest convierte el token en un string
+
+    //setear la expiracion
+    this.resetPasswordExpire = Date.now() + 30 * 60 * 1000; //fecha actual + 30 minutos, 30 minutos en milisegundos
+
+    return resetToken; //retorna el token generado para enviarlo por email al usuario para que lo use para resetear su password
+}
 
 module.exports = mongoose.model("auth", usuarioSchema); //exporto el modelo
 
