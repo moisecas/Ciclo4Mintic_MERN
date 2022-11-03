@@ -130,3 +130,96 @@ exports.resetPassword= catchAsyncErrors (async (req, res, next) => { //recibe 3 
     tokenEnviado(user, 200, res); //envia el token al navegador, recibe user, statusCode, res
 
 }) //resetear contraseña requiere 3 parametros, y retorna una promesa que resuelve una funcion que recibe 3 parametros, y retorna un catch que recibe next como parametro
+
+//Obtener usuario actual
+exports.getUserProfile= catchAsyncErrors (async (req, res, next) => { //recibe 3 parametros, y retorna una promesa que resuelve una funcion que recibe 3 parametros, y retorna un catch que recibe next como parametro
+    const user = await User.findById(req.user.id); //busca un usuario por el id del usuario que viene en el req user, cookie
+    res.status(200).json({ //envia un json con el status 200, y con el usuario
+        success: true,
+        user
+    })
+}) //Obtener usuario actual requiere 3 parametros, y retorna una promesa que resuelve una funcion que recibe 3 parametros, y retorna un catch que recibe next como parametro
+
+
+//actualizar contraseña del usuario actual o logueado, cokkie vigente con el token 
+exports.updatePassword = catchAsyncErrors (async (req, res, next) => { //recibe 3 parametros, y retorna una promesa que resuelve una funcion que recibe 3 parametros, y retorna un catch que recibe next como parametro
+    const user = await User.findById(req.user.id).select("+password"); //busca un usuario por el id del usuario que viene en el req user, cookie, y selecciona la contraseña
+
+    //comparar la contraseña actual con la contraseña del usuario
+    const sonIguales = await user.compararPass(req.body.oldPassword); //compara la contraseña del usuario con la contraseña que viene en el req body
+    if(!sonIguales){ //si no son iguales
+        return next (new ErrorHandler ("Contraseña incorrecta", 401)) //retorna un error, usamos el middleware de error para mandar el error
+    }
+    //si la contraseña es correcta, actualizamos la contraseña
+    user.password = req.body.newPassword; //la contraseña del usuario es la contraseña que viene en el req body, seteamos la nueva contraseña
+    await user.save(); //guarda el usuario con el token de reseteo de contraseña, y no valida los campos
+
+    tokenEnviado(user, 200, res); //envia el token al navegador, recibe user, statusCode, res
+})
+//de tipo async para  capturar los estados
+
+//actualizar perfil del usuario actual o logueado, cokkie vigente con el token
+exports.updateProfile = catchAsyncErrors (async (req, res, next) => { //recibe 3 parametros, y retorna una promesa que resuelve una funcion que recibe 3 parametros, y retorna un catch que recibe next como parametro
+    //push informacion nueva sobre la vieja, debo crear un nuevo objeto con la informacion nueva
+    const newUserData ={
+        nombre: req.body.nombre,
+        email: req.body.email //lo que esta en el body
+    }
+    //actualizar avatar
+
+    const user = await User.findByIdAndUpdate(req.user.id, newUserData, { //id, nuevainfo, busca un usuario por el id del usuario que viene en el req user, cookie, y actualiza la informacion del usuario con la informacion que viene en el req body
+        new: true, //retorna el usuario actualizado
+        runValidators: true, //valida los campos
+        useFindAndModify: false //para que no deprecie el metodo
+    })
+    res.status(200).json({ //envia un json con el status 200, y con el usuario
+        success: true,
+        user
+    })
+
+
+})
+
+//Servicios controladores admin 
+
+//obtener todos los usuarios
+exports.getAllUsers = catchAsyncErrors (async (req, res, next) => { //recibe 3 parametros, y retorna una promesa que resuelve una funcion que recibe 3 parametros, y retorna un catch que recibe next como parametro
+    const users = await User.find(); //busca todos los usuarios 
+    res.status(200).json({ //envia un json con el status 200, y con el usuario
+        success: true,
+        users
+    })
+})
+
+
+//obtener detalles de un usuario
+exports.getUserDetails = catchAsyncErrors (async (req, res, next) => { //recibe 3 parametros, y retorna una promesa que resuelve una funcion que recibe 3 parametros, y retorna un catch que recibe next como parametro
+    const user = await User.findById(req.params.id); //busca un usuario por el id que viene en el req params mi ruta debe llegar con el id, un usuario particular
+    if(!user){ //si no existe el usuario
+        return next (new ErrorHandler (`Usuario no encontrado con el id: ${req.params.id}`, 404)) //retorna un error, usamos el middleware de error para mandar el error
+    }
+    res.status(200).json({ //envia un json con el status 200, y con el usuario
+        success: true, //si todo sale bien
+        user //usuario encontrado
+    })
+})
+
+//actualizar perfil de usuario como administrador
+exports.udptateUser = catchAsyncErrors (async (req, res, next) => { //recibe 3 parametros, y retorna una promesa que resuelve una funcion que recibe 3 parametros, y retorna un catch que recibe next como parametro
+    const nuevaData ={
+        nombre: req.body.nombre,
+        email: req.body.email, //lo que esta en el body
+        role: req.body.rol
+    }; //creo un objeto vacio para ir agregando la informacion que viene en el req body
+
+    const user = await User.findByIdAndUpdate(req.params.id, nuevaData, { //del params id que viene de la url
+        new: true, //retorna el usuario actualizado
+        runValidators: true, //valida los campos
+        useFindAndModify: false //para que no deprecie el metodo
+    })  
+    res.status(200).json({ //envia un json con el status 200, y con el usuario
+        success: true,
+        user
+    })
+        //id, nuevainfo, busca un usuario por el id que viene en el req params, y actualiza la informacion del usuario con la informacion que viene en el req body
+})

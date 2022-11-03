@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer'); //para enviar correos electronicos
 
+//configuracion de correo de salida 
 const sendEmail = async options => {
     const transporter = nodemailer.createTransport({
         //info que traigo de mailtrap para enviar correos, new account, smtp, settings, copy credentials
@@ -22,6 +23,7 @@ const sendEmail = async options => {
     await transporter.sendMail(message); //envia el correo con el parametro message
 
 }
+
 
 module.exports = sendEmail;
   
