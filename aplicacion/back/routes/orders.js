@@ -15,9 +15,9 @@ router.route("/orders/me").get(isAuthenticatedUser, myOrders) //ruta para obtene
 
 
 //rutas de admin
-router.route("/admin/orders").get(isAuthenticatedUser, authorizeRoles("admin"), allOrders)
-router.route("/admin/order/:id").put(isAuthenticatedUser, authorizeRoles("admin"), updateOrder)
-router.route("/admin/order/:id").delete(isAuthenticatedUser, authorizeRoles("admin"), deleteOrder)
+router.route("/admin/orders").get(isAuthenticatedUser, authorizeRoles("admin"), allOrders) //ruta para obtener todas las ordenes, llama al metodo allOrders del controlador orderController
+router.route("/admin/order/:id").put(isAuthenticatedUser, authorizeRoles("admin"), updateOrder) //ruta para actualizar una orden, llama al metodo updateOrder del controlador orderController
+router.route("/admin/order/:id").delete(isAuthenticatedUser, authorizeRoles("admin"), deleteOrder) //ruta para eliminar una orden, llama al metodo deleteOrder del controlador orderController
 
 
 module.exports=router;

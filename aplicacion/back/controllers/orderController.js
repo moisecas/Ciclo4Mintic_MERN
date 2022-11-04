@@ -65,11 +65,11 @@ exports.myOrders= catchAsyncErrors(async(req,res, next)=>{ //ver las ordenes del
 //Admin
 //Ver todas la ordenes (Administrador)
 exports.allOrders= catchAsyncErrors(async (req, res, next)=>{
-    const orders= await Order.find()
+    const orders= await Order.find() //busca todas las ordenes
 
-    let cantidadTotal= 0;
-    orders.forEach(order =>{
-        cantidadTotal= cantidadTotal + order.precioTotal
+    let cantidadTotal= 0; //cantidad total de ordenes, es de tipo let para que se pueda modificar
+    orders.forEach(order =>{ //uso forEach para recorrer el array de ordenes
+        cantidadTotal= cantidadTotal + order.precioTotal //cantidad total de ordenes es igual a la cantidad total de ordenes + el precio total de la orden
        // cantidadTotal += order.precioTotal
     })
 
@@ -93,10 +93,10 @@ exports.updateOrder= catchAsyncErrors(async(req, res, next)=>{
         return next(new ErrorHandler("Esta orden ya fue enviada", 400))
     }
 
-    order.estado= req.body.estado;
-    order.fechaEnvio= Date.now();
+    order.estado= req.body.estado; //el estado de la orden es el que viene en el body
+    order.fechaEnvio= Date.now(); //la fecha de envio es la fecha actual del servidor (Date.now)
 
-    await order.save()
+    await order.save() //guarda la orden en la base de datos
 
     res.status(200).json({
         success:true,
@@ -104,10 +104,10 @@ exports.updateOrder= catchAsyncErrors(async(req, res, next)=>{
     })
 })
 
-async function updateStock(id, quantity){
-    const product = await Product.findById(id);
-    product.inventario= product.inventario-quantity;
-    await product.save({validateBeforeSave: false})
+async function updateStock(id, quantity){ //funcion para actualizar el stock
+    const product = await Product.findById(id); //guardo en una const el producto que viene por id
+    product.inventario= product.inventario-quantity; //el inventario del producto es igual al inventario del producto menos la cantidad que viene por parametro
+    await product.save({validateBeforeSave: false})//validateBeforeSave: false para que no valide el stock, porque ya lo validamos en el front
 }
 
 //Eliminar una orden (admin)
