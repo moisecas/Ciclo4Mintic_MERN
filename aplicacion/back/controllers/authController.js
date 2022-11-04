@@ -223,3 +223,21 @@ exports.udptateUser = catchAsyncErrors (async (req, res, next) => { //recibe 3 p
     })
         //id, nuevainfo, busca un usuario por el id que viene en el req params, y actualiza la informacion del usuario con la informacion que viene en el req body
 })
+
+
+//eliminar usuario como administrador
+exports.deleteUser = catchAsyncErrors(async (req,res,next)=>{ //con el catchasyncerrors capturo los errores
+    //vamos a escribir primero el usuario que queremos eliminar
+    const user = await User.findById(req.params.id); //busca un usuario por el id que viene en el req params mi ruta debe llegar con el id, un usuario particular
+    if(!user){ //si no existe el usuario
+        return next(new ErrorHandler(`Usuario con id: ${req.params.id}  
+        no se encuentra en nuestra base de datos`)) //retorna un error, usamos el middleware de error para mandar el error
+    }
+
+    await user.remove(); //elimina el usuario
+
+    res.status(200).json({ //envia un json con el status 200, y con el usuario 
+        success:true,
+        message:"Usuario eliminado correctamente"
+    })
+}) 

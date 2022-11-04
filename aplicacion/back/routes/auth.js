@@ -1,7 +1,7 @@
 const express=require("express");
 
 const { registroUsuario, loginUser, logOut, forgotPassword, resetPassword, 
-    getUserProfile,updatePassword, updateProfile, getAllUsers, getUserDetails, udptateUser } = require("../controllers/authController");
+    getUserProfile,updatePassword, updateProfile, getAllUsers, getUserDetails, udptateUser, deleteUser } = require("../controllers/authController");
 
 const { isAuthenticatedUser, authorizeRoles } = require("../middleware/auth");
 const router= express.Router();
@@ -19,6 +19,7 @@ router.route('/yo/updateProfile').put(isAuthenticatedUser,updateProfile) //ruta 
 router.route('/admin/allUsers').get(isAuthenticatedUser, authorizeRoles("admin"), getAllUsers) //ruta para obtener todos los usuarios, llama al metodo allUsers del controlador authController
 router.route('/admin/user/:id').get(isAuthenticatedUser, authorizeRoles("admin"), getUserDetails) //ruta para obtener un usuario, llama al metodo getUserDetails del controlador authController
 router.route('/admin/updateUser/:id').put(isAuthenticatedUser, authorizeRoles("admin"), udptateUser) //ruta para actualizar un usuario, llama al metodo updateUser del controlador authController
+router.route("/admin/deleteUser/:id").delete(isAuthenticatedUser, authorizeRoles("admin"), deleteUser)
 
 
 module.exports= router 

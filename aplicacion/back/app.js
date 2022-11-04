@@ -9,10 +9,12 @@ app.use(cookieParser()); //para poder usar cookies
 //importamos las rutas
 const products = require('./routes/products'); //importamos el archivo de rutas de productos
 const usuarios = require('./routes/auth'); //importamos el archivo de rutas de usuarios
+const ordenes = require('./routes/orders'); //importamos el archivo de rutas de ordenes
 
 //creamos las rutas
 app.use('/api', products); //creamos la ruta
 app.use('/api', usuarios); //creamos la ruta de usuarios 
+app.use('/api', ordenes); //creamos la ruta de ordenes
 
 //manejador de errores
 app.use(errorMiddleware); //usamos el middleware de errores
