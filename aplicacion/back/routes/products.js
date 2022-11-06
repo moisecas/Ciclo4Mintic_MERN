@@ -1,7 +1,9 @@
 const express = require('express'); //importamos express 
 const router = express.Router(); //creamos un router, para crear rutas 
 
-const {getProducts, newProduct,getProductById,updateProduct,deleteProduct} = require('../controllers/productsController'); //importamos los metodos del controlador, creando el servicio
+const {getProducts, newProduct,getProductById,updateProduct,
+    deleteProduct,createProductReview,
+    getProductReviews,deleteReview} = require('../controllers/productsController'); //importamos los metodos del controlador, creando el servicio
 const { isAuthenticatedUser,authorizeRoles } = require('../middleware/auth'); //importamos los metodos del middleware de autenticacion
 
 
@@ -10,6 +12,12 @@ router.route('/producto/nuevo').post(isAuthenticatedUser, authorizeRoles("admin"
 router.route('/producto/:id').get(getProductById); //creamos la ruta, get es para obtener, route es para crear una ruta, getProductById es el metodo que vamos a ejecutar, es necesario el :id para que sepa que es un parametro
 router.route('/producto/:id').put(isAuthenticatedUser, authorizeRoles("admin"),updateProduct); //creamos la ruta, put es para actualizar, route es para crear una ruta, updateProduct es el metodo que vamos a ejecutar, es necesario el :id para que sepa que es un parametro
 router.route('/producto/:id').delete(isAuthenticatedUser, authorizeRoles("admin"),deleteProduct); //creamos la ruta, delete es para eliminar, route es para crear una ruta, deleteProduct es el metodo que vamos a ejecutar, es necesario el :id para que sepa que es un parametro
+
+
+//routes rewiew 
+router.route("/review").put(isAuthenticatedUser, createProductReview) //creamos la ruta, put es para actualizar, route es para crear una ruta, createProductReview es el metodo que vamos a ejecutar, en el controlador se que necesita mi ruta para el json de prueba 
+router.route("/reviews").get(isAuthenticatedUser, getProductReviews) //creamos la ruta, get es para obtener, route es para crear una ruta, getProductReviews es el metodo que vamos a ejecutar, en el controlador se que necesita mi ruta para el json de prueba
+router.route("/review").delete(isAuthenticatedUser, deleteReview) //creamos la ruta, delete es para eliminar, route es para crear una ruta, deleteReview es el metodo que vamos a ejecutar, en el controlador se que necesita mi ruta para el json de prueba
 
 
 module.exports = router; //exportamos el modulo para que lo pueda usar el server 

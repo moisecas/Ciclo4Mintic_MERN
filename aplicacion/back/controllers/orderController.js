@@ -112,14 +112,14 @@ async function updateStock(id, quantity){ //funcion para actualizar el stock
 
 //Eliminar una orden (admin)
 exports.deleteOrder = catchAsyncErrors(async (req, res, next)=>{
-    const order = await Order.findById(req.params.id);
+    const order = await Order.findById(req.params.id); //busca la orden por id, recibe el id por parametro en la url (req.params.id)
 
     if(!order){
         return next (new ErrorHandler("Esa orden no esta registrada", 404))
     }
-    await order.remove()
+    await order.remove() //elimina la orden de la base de datos
 
-    res.status(200).json({
+    res.status(200).json({ //200 es que se encontró y se eliminó
         success:true,
         message:"Orden eliminada correctamente"
     })

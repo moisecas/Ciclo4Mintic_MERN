@@ -3,11 +3,33 @@
 const producto = require('../models/productos'); //importamos el modelo de productos
 const ErrorHandler = require('../utils/errorHandler'); //importo el modulo de errores de express validator
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
+const APIFeatures = require("../utils/apiFeatures"); //importo el modulo de paginacion
 const fetch =(url)=>import('node-fetch').then(({default:fetch})=>fetch(url)); //importamos el fetch de node-fetch 
 
 //ver lista de productos 
 exports.getProducts = catchAsyncErrors (async (req, res, next) => { //trabaja con un requisito, una respuesta y un next, ejecute una acción al terminar
     
+    const resPerPage = 3; //cantidad de productos por pagina
+    const productsCount = await producto.countDocuments(); //cuenta la cantidad de productos que hay en la base de datos, countDocuments es un metodo de mongoose
+
+    const apiFeatures = new APIFeatures(producto.find(), req.query) //traigo apiFeatures, le paso el modelo de productos y el query
+        .search() //busqueda de productos, se puede buscar por nombre, descripcion, precio, etc, search es un submetodo de apiFeatures
+        .filter(); //filtro de categorias, se puede filtrar por categorias, filter es un submetodo de apiFeatures
+
+    let products = await apiFeatures.query; //traigo los productos, apiFeatures.query es el query que se ejecuta
+    let filteredProductsCount= products.length; //cantidad de productos filtrados, products.length es la cantidad de productos que hay en la base de datos
+    apiFeatures.pagination(resPerPage); //paginacion de productos, le paso la cantidad de productos por pagina
+    products = await apiFeatures.query.clone(); //traigo los productos, apiFeatures.query es el query que se ejecuta, .clone es para clonar el query gracias a mongoose
+
+    res.status(200).json({ //retorna un json con los productos
+        success: true,
+        productsCount, //cantidad de productos
+        resPerPage, //cantidad de productos por pagina
+        filteredProductsCount, //cantidad de productos filtrados
+        products //productos filtrados y paginados 
+    })         
+
+
     const productos = await producto.find(); //buscamos todos los productos con el modelo de productos, devolución de la promesa
     //sabe que es una entidad y puedo interacturar con ella, producto es el modelo de productos, find es un método de mongoose, devuelve una promesa
 
@@ -91,6 +113,95 @@ exports.newProduct =  catchAsyncErrors( async (req, res, next) => { //req es el 
     }) //status 201 es que se creo un nuevo recurso
 }) //trabaja con un requisito, una respuesta y un next, ejecute una acción al terminar
 //promesa para crear un nuevo producto espero que se cree y luego lo muestro en la consola
+
+
+//crear un review 
+exports.createProductReview = catchAsyncErrors(async (req, res, next) => {
+    const { rating, comentario, idProducto } = req.body; //desestructuro el req.body, rating, comentario y idProducto, esto viene del front
+
+    const opinion = { //creo un objeto con los datos que necesito
+        nombreCliente: req.user.nombre,
+        rating: Number(rating),
+        comentario
+    }
+
+    const product = await producto.findById(idProducto); //busco el producto por id, el idProducto es el id que viene del front
+
+    const isReviewed = product.opiniones.find(item => //busco si el producto ya fue revieweado por el usuario que esta logueado
+        item.nombreCliente === req.user.nombre) //actuaizar mi review,  traiga todas las opiniones y recorra cada una de ellas, si el nombre del cliente es igual al nombre del usuario que esta logueado, entonces ya fue revieweado, ya opine
+
+    if (isReviewed) { //si ya fue revieweado, si es true
+        product.opiniones.forEach(opinion => { //recorro las opiniones
+            if (opinion.nombreCliente === req.user.nombre) { //si el nombre del cliente es igual al nombre del usuario que esta logueado
+                opinion.comentario = comentario, //verifico si el comentario es igual al comentario que viene del front, actualizo el comentario
+                    opinion.rating = rating //verifico si el rating es igual al rating que viene del front
+            }
+        })
+    } else { //si no fue revieweado
+        product.opiniones.push(opinion) //agrego la opinion al producto, uso el json que cree al inicio del metodo
+        product.numCalificaciones = product.opiniones.length //actualizo el numero de calificaciones
+    }
+    //calcular el promedio de las calificaciones
+    product.calificacion = product.opiniones.reduce((acc, opinion) =>  //recorrer las opiniones y sumarlas, acc es el acumulador, opinion es cada una de las opiniones
+        opinion.rating + acc, 0) / product.opiniones.length //el rating de cada una de las opiniones mas el acumulador, dividido por el numero de opiniones
+        //acc es el acumulador, opinion es cada una de las opiniones, el rating de cada una de las opiniones mas el acumulador, dividido por el numero de opiniones
+    await product.save({ validateBeforeSave: false }); //guardo el producto, validateBeforeSave: false es para que no valide las validaciones del modelo
+
+    res.status(200).json({ //respondo con un status 200 que es que todo esta bien, json es un objeto y con el producto que actualice
+        success: true,
+        message: "Hemos opinado correctamente"
+    })
+
+})
+
+//Ver todas las review de un producto
+exports.getProductReviews = catchAsyncErrors(async (req, res, next) => { //exports para que sea publico, catchAsyncErrors para capturar errores,  async para que sea asincrono, req es el request, res es la respuesta, next es para que ejecute una acción al terminar
+    const product = await producto.findById(req.query.id) //busco un producto por id, el req.query.id es el id que viene por la url, corresponde al producto que busco
+    //req.query.id es el id que viene por la url, corresponde al producto que busco
+    res.status(200).json({
+        success: true,
+        opiniones: product.opiniones
+    })
+})
+
+//Eliminar review
+exports.deleteReview = catchAsyncErrors(async (req, res, next) => {
+    const product = await producto.findById(req.query.idProducto); //busco un producto por id, el req.query.idProducto es el id que viene por la url, corresponde al producto que busco
+
+    const opiniones = product.opiniones.filter(opinion => //asigno a opiniones el producto que busco, filtro las opiniones, traigo todas las opiniones y recorro cada una de ellas, si el nombre del cliente es igual al nombre del usuario que esta logueado, entonces ya fue revieweado, ya opine
+        opinion._id.toString() !== req.query.idReview.toString()); //si el id de la opinion es diferente al id de la review que viene por la url, entonces lo elimino
+        //uso tostring porque el id es un objeto y no puedo comparar objetos con strings
+    const numCalificaciones = opiniones.length; //asigno a numCalificaciones el numero de opiniones
+    //calcular el promedio de las calificaciones es necesario volverlo a hacer 
+    const calificacion = product.opiniones.reduce((acc, Opinion) => //calculo el promedio de las calificaciones
+        Opinion.rating + acc, 0) / opiniones.length; //el rating de cada una de las opiniones mas el acumulador, dividido por el numero de opiniones
+        //Opinion.rating es el rating de cada una de las opiniones, acc es el acumulador, opiniones.length es el numero de opiniones
+    await producto.findByIdAndUpdate(req.query.idProducto, { //await para que espere a que se ejecute, actualizo el producto, busco el producto por id, el req.query.idProducto es el id que viene por la url, corresponde al producto que busco
+        opiniones,
+        calificacion,
+        numCalificaciones
+    }, { //mandarlo para la base de datos actualizado 
+        new: true,
+        runValidators: true,
+        useFindAndModify: false
+    })
+    res.status(200).json({ //la respuesta es un json con un mensaje de que se elimino correctamente
+        success: true,
+        message: "review eliminada correctamente"
+    })
+
+})
+
+
+
+
+
+
+
+
+
+
+
 
 
 //Metodo fetch 
