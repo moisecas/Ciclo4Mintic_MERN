@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react'
 import { Link } from 'react-router-dom'
+import Search from './Search'
 const Header = () => {
   return (
     <Fragment>
@@ -11,18 +12,9 @@ const Header = () => {
         </div>
 
         <div className='col-12 col-md-6 mt-2 mt-md-0'>
-            <div className="input-group">
-                <input
-                    type="text"
-                    id="search_field"
-                    class="form-control"
-                    placeholder='Que producto busca?'></input>
-                <div class="input-group-append">
-                    <button id="search-btn" class="btn">
-                        <i class="fa fa-search-plus fa-2x text-white" aria-hidden="true"></i>
-                    </button>
-                </div>
-            </div>
+            {/* hacer la busqueda */}
+            <Search/>
+            
         </div>
         <div className="col-12 col-md-3 mt-4 mt-md-0 text-center">
             <div className="ml-4 dropdown d-inline">

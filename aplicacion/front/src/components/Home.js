@@ -2,18 +2,22 @@ import React, { Fragment,useEffect, useState } from 'react'
 import MetaData from './layout/MetaData'
 import {useDispatch, useSelector} from 'react-redux'
 import { getProducts } from '../actions/productActions'
-import { Link } from 'react-router-dom' //para poder usar el link de react router dom link es para poder hacer un link a otra pagina
+import { useParams, Link } from 'react-router-dom' //para poder usar el link de react router dom link es para poder hacer un link a otra pagina
 //import Product from './products/Product'
 //import { useAlert } from 'react-alert'
 import Pagination from 'react-js-pagination' //para poder usar la paginacion
 
 const Home = () => {
+    const params = useParams() //para poder usar el link de react router dom link es para poder hacer un link a otra pagina
+    const keyword = params.keyword 
 
     const [currentPage, setCurrentPage] = useState(1) //para poder usar la paginacion y saber en que pagina estoy, declarar variable y se crea su metodo set, puedo cambiar el estado, le doy valor por defecto 1
 
     const { loading, productos, resPerPage, productsCount } = useSelector(state => state.products) //desde el actions se trae estas variables 
    
     //const alert = useAlert()  //lo inicializo 
+
+    
 
 
     const dispatch = useDispatch() //las ajusta en el dispatch para poder usarlas en el useEffect, para que en el html podamos contar con esas variables
@@ -22,9 +26,9 @@ const Home = () => {
         // if(error){
         //     return alert.error(error) //muestra el error
         // }
-        dispatch(getProducts(currentPage)) //ejecutar la accion de obtener productos
+        dispatch(getProducts(currentPage), keyword) //ejecutar la accion de obtener productos
         //alert.success('Ok. Listo') //mostrar alerta de que todo salio bien
-    }, [dispatch, currentPage]) //ver como un arregle el dispatch es un parametro que se pasa a la funcion
+    }, [dispatch, currentPage, keyword]) //ver como un arregle el dispatch es un parametro que se pasa a la funcion
 
     function setCurrentPageNo(pageNumber){ //pagination asume y le pase un numero
         setCurrentPage(pageNumber) //traigo el state de la pagina actual y le asigno el numero de pagina que estoy

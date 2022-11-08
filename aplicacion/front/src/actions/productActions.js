@@ -14,7 +14,7 @@ export const getProducts = (currentPage =1, keyword='') => async(dispatch)=>{ //
     try {
         dispatch({type: ALL_PRODUCTS_REQUEST})
 
-        const {data} = await axios.get(`/api/productos?keyword=${keyword}&page=${currentPage}`)
+        const {data} = await axios.get(`/api/productos?keyword=${keyword}&page=${currentPage}`) //palabra clave y luego la paginación
         //debo traer la paginacion, link para que se aplique esa paginacion
 
 
