@@ -17,8 +17,10 @@ export const productsReducer = (state ={ products: []}, action)=>{
         case ALL_PRODUCTS_SUCCESS:
             return{
                 loading:false,
-                productos: action.payload.productos,
-                count: action.payload.count
+                productos: action.payload.products,
+                productsCount: action.payload.productsCount,
+                resPerPage: action.payload.resPerPage,
+                filteredProductsCount: action.payload.filteredProductsCount //cuente cuantos productos hay en la busqueda
             }
 
         case ALL_PRODUCTS_FAIL:

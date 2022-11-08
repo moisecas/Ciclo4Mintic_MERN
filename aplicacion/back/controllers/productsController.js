@@ -9,7 +9,7 @@ const fetch =(url)=>import('node-fetch').then(({default:fetch})=>fetch(url)); //
 //ver lista de productos 
 exports.getProducts = catchAsyncErrors (async (req, res, next) => { //trabaja con un requisito, una respuesta y un next, ejecute una acción al terminar
     
-    const resPerPage = 3; //cantidad de productos por pagina
+    const resPerPage = 4; //cantidad de productos por pagina
     const productsCount = await producto.countDocuments(); //cuenta la cantidad de productos que hay en la base de datos, countDocuments es un metodo de mongoose
 
     const apiFeatures = new APIFeatures(producto.find(), req.query) //traigo apiFeatures, le paso el modelo de productos y el query
@@ -29,20 +29,20 @@ exports.getProducts = catchAsyncErrors (async (req, res, next) => { //trabaja co
         products //productos filtrados y paginados 
     })         
 
+    //Error [ERR_HTTP_HEADERS_SENT]: Cannot set headers after they are sent to the client hay que eliminar una respuesta 200
+    // const productos = await producto.find(); //buscamos todos los productos con el modelo de productos, devolución de la promesa
+    // //sabe que es una entidad y puedo interacturar con ella, producto es el modelo de productos, find es un método de mongoose, devuelve una promesa
 
-    const productos = await producto.find(); //buscamos todos los productos con el modelo de productos, devolución de la promesa
-    //sabe que es una entidad y puedo interacturar con ella, producto es el modelo de productos, find es un método de mongoose, devuelve una promesa
+    // if (!productos){
+    //     return next(new ErrorHandler("Informacion no encontrada", 404))
+    // } //si no hay productos, respondo con un status 404 que es que no se encontro el recurso, json es un objeto
 
-    if (!productos){
-        return next(new ErrorHandler("Informacion no encontrada", 404))
-    } //si no hay productos, respondo con un status 404 que es que no se encontro el recurso, json es un objeto
-
-    res.status(200).json({  //status 200 es que todo esta bien, json es un objeto, getmapping, convierte el objeto en json
-        success: true,
-        count: productos.length, //cuantos productos hay
-        productos, //productos que encontramos
-        message: 'Mostrar todos los productos'
-    })//status 200 es que todo esta bien, json es que vamos a enviar un json
+    // res.status(200).json({  //status 200 es que todo esta bien, json es un objeto, getmapping, convierte el objeto en json
+    //     success: true,
+    //     count: productos.length, //cuantos productos hay
+    //     productos, //productos que encontramos
+    //     message: 'Mostrar todos los productos'
+    // })//status 200 es que todo esta bien, json es que vamos a enviar un json
 })
 
 

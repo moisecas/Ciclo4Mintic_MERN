@@ -1,26 +1,34 @@
-import React, { Fragment,useEffect } from 'react'
+import React, { Fragment,useEffect, useState } from 'react'
 import MetaData from './layout/MetaData'
 import {useDispatch, useSelector} from 'react-redux'
 import { getProducts } from '../actions/productActions'
 import { Link } from 'react-router-dom' //para poder usar el link de react router dom link es para poder hacer un link a otra pagina
+//import Product from './products/Product'
 //import { useAlert } from 'react-alert'
+import Pagination from 'react-js-pagination' //para poder usar la paginacion
 
 const Home = () => {
 
-    const { loading, productos } = useSelector(state => state.products) //trae los valores de los estados que estan en el front
+    const [currentPage, setCurrentPage] = useState(1) //para poder usar la paginacion y saber en que pagina estoy, declarar variable y se crea su metodo set, puedo cambiar el estado, le doy valor por defecto 1
+
+    const { loading, productos, resPerPage, productsCount } = useSelector(state => state.products) //desde el actions se trae estas variables 
    
     //const alert = useAlert()  //lo inicializo 
 
 
-    const dispatch = useDispatch()
+    const dispatch = useDispatch() //las ajusta en el dispatch para poder usarlas en el useEffect, para que en el html podamos contar con esas variables
     useEffect(() => { //useEffect es un hook de react que se ejecuta cuando el componente se monta
         //si hay error finaliza la ejecucion y muestra el error
         // if(error){
         //     return alert.error(error) //muestra el error
         // }
-        dispatch(getProducts()) //ejecutar la accion de obtener productos
+        dispatch(getProducts(currentPage)) //ejecutar la accion de obtener productos
         //alert.success('Ok. Listo') //mostrar alerta de que todo salio bien
-    }, [dispatch]) //ver como un arregle el dispatch es un parametro que se pasa a la funcion
+    }, [dispatch, currentPage]) //ver como un arregle el dispatch es un parametro que se pasa a la funcion
+
+    function setCurrentPageNo(pageNumber){ //pagination asume y le pase un numero
+        setCurrentPage(pageNumber) //traigo el state de la pagina actual y le asigno el numero de pagina que estoy
+    } //funcion para cambiar de pagina, usa el seter del useState
 
   return (
     <Fragment>
@@ -52,6 +60,22 @@ const Home = () => {
                     ))}
                     </div>
             </section>
+
+            <div className='d-flex justify-content-center mt-5'> {/*para poder usar la paginacion*/}
+            <Pagination
+                        activePage={currentPage} //pagina actual
+                        itemsCountPerPage={resPerPage} //resultados por pagina
+                        totalItemsCount={productsCount} //total de productos
+                        onChange={setCurrentPageNo} //funcion para cambiar de pagina
+                        nextPageText={'Siguiente'} //texto de la pagina siguiente
+                        prevPageText={'Anterior'} //texto de la pagina anterior
+                        firstPageText={'Primera'} //texto de la primera pagina
+                        lastPageText={'Ultima'} //texto de la ultima pagina
+                        itemClass='page-item' // clase de la pagina viene de bootstrap
+                        linkClass='page-link'// clase del link, cuando se hace click en la pagina viene de bootstrap
+                        />
+            </div>
+
             </Fragment>
     )}
     
