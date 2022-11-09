@@ -166,29 +166,53 @@ exports.getProductReviews = catchAsyncErrors(async (req, res, next) => { //expor
 
 //Eliminar review
 exports.deleteReview = catchAsyncErrors(async (req, res, next) => {
-    const product = await producto.findById(req.query.idProducto); //busco un producto por id, el req.query.idProducto es el id que viene por la url, corresponde al producto que busco
+    const product = await producto.findById(req.query.idProducto);
 
-    const opiniones = product.opiniones.filter(opinion => //asigno a opiniones el producto que busco, filtro las opiniones, traigo todas las opiniones y recorro cada una de ellas, si el nombre del cliente es igual al nombre del usuario que esta logueado, entonces ya fue revieweado, ya opine
-        opinion._id.toString() !== req.query.idReview.toString()); //si el id de la opinion es diferente al id de la review que viene por la url, entonces lo elimino
-        //uso tostring porque el id es un objeto y no puedo comparar objetos con strings
-    const numCalificaciones = opiniones.length; //asigno a numCalificaciones el numero de opiniones
-    //calcular el promedio de las calificaciones es necesario volverlo a hacer 
-    const calificacion = product.opiniones.reduce((acc, Opinion) => //calculo el promedio de las calificaciones
-        Opinion.rating + acc, 0) / opiniones.length; //el rating de cada una de las opiniones mas el acumulador, dividido por el numero de opiniones
-        //Opinion.rating es el rating de cada una de las opiniones, acc es el acumulador, opiniones.length es el numero de opiniones
-    await producto.findByIdAndUpdate(req.query.idProducto, { //await para que espere a que se ejecute, actualizo el producto, busco el producto por id, el req.query.idProducto es el id que viene por la url, corresponde al producto que busco
-        opiniones,
+    const opi = product.opiniones.filter(opinion =>
+        opinion._id.toString() !== req.query.idReview.toString());
+
+    const numCalificaciones = opi.length;
+
+    const calificacion = opi.reduce((acc, Opinion) =>
+        Opinion.rating + acc, 0) / opi.length;
+
+    await producto.findByIdAndUpdate(req.query.idProducto, {
+        opi,
         calificacion,
         numCalificaciones
-    }, { //mandarlo para la base de datos actualizado 
+    }, {
         new: true,
         runValidators: true,
         useFindAndModify: false
     })
-    res.status(200).json({ //la respuesta es un json con un mensaje de que se elimino correctamente
+    res.status(200).json({
         success: true,
         message: "review eliminada correctamente"
     })
+
+    // const product = await producto.findById(req.query.idProducto); //busco un producto por id, el req.query.idProducto es el id que viene por la url, corresponde al producto que busco
+
+    // const opiniones = product.opiniones.filter(opinion => //asigno a opiniones el producto que busco, filtro las opiniones, traigo todas las opiniones y recorro cada una de ellas, si el nombre del cliente es igual al nombre del usuario que esta logueado, entonces ya fue revieweado, ya opine
+    //     opinion._id.toString() !== req.query.idReview.toString()); //si el id de la opinion es diferente al id de la review que viene por la url, entonces lo elimino
+    //     //uso tostring porque el id es un objeto y no puedo comparar objetos con strings
+    // const numCalificaciones = opiniones.length; //asigno a numCalificaciones el numero de opiniones
+    // //calcular el promedio de las calificaciones es necesario volverlo a hacer 
+    // const calificacion = product.opiniones.reduce((acc, Opinion) => //calculo el promedio de las calificaciones
+    //     Opinion.rating + acc, 0) / opiniones.length; //el rating de cada una de las opiniones mas el acumulador, dividido por el numero de opiniones
+    //     //Opinion.rating es el rating de cada una de las opiniones, acc es el acumulador, opiniones.length es el numero de opiniones
+    // await producto.findByIdAndUpdate(req.query.idProducto, { //await para que espere a que se ejecute, actualizo el producto, busco el producto por id, el req.query.idProducto es el id que viene por la url, corresponde al producto que busco
+    //     opiniones,
+    //     calificacion,
+    //     numCalificaciones
+    // }, { //mandarlo para la base de datos actualizado 
+    //     new: true,
+    //     runValidators: true,
+    //     useFindAndModify: false
+    // })
+    // res.status(200).json({ //la respuesta es un json con un mensaje de que se elimino correctamente
+    //     success: true,
+    //     message: "review eliminada correctamente"
+    // })
 
 })
 
