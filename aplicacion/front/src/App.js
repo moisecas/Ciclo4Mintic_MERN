@@ -8,6 +8,7 @@ import { Dashboard } from './components/admin/Dashboard';
 import ProductList from './components/admin/ProductList';
 import NewProduct from './components/admin/NewProduct';
 import Cart from './components/cart/Cart';
+import { Login } from './components/user/Login';
 
 
 import {BrowserRouter as Router, Routes,Route} from 'react-router-dom'; //importar el router del dom
@@ -32,7 +33,8 @@ function App() {
           <Route path="/newProduct" element={<NewProduct />}/>   {/* en la ruta localhost:3000/newProduct muestre el componente newProduct ruta de newProduct */}
           <Route path="/search/:keyword" element={<Home />}/> {/* llama al home para la busqueda de productos pues ahí se ancla la keyword */}
           <Route path="/cart" element={<Cart />}/>   {/* en la ruta localhost:3000/cart muestre el componente cart ruta de cart */}
-        </Routes>
+          <Route path="/login" element={<Login />} />
+        </Routes> 
         </div> 
         
         

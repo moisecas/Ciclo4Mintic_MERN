@@ -6,10 +6,15 @@ import { useParams, Link } from 'react-router-dom' //para poder usar el link de 
 //import Product from './products/Product'
 //import { useAlert } from 'react-alert'
 import Pagination from 'react-js-pagination' //para poder usar la paginacion
+import Slider from 'rc-slider' //rc slider es un componente de react para hacer sliders
+import 'rc-slider/assets/index.css' //para poder usar el css de rc slider, para usar sus clases 
+
+
 
 const Home = () => {
     const params = useParams() //para poder usar el link de react router dom link es para poder hacer un link a otra pagina
     const keyword = params.keyword 
+    const [precio, setPrecio] = useState([1000,1000000]) //para poder usar el slider de precio, entre 1000 y 1000000
 
     const [currentPage, setCurrentPage] = useState(1) //para poder usar la paginacion y saber en que pagina estoy, declarar variable y se crea su metodo set, puedo cambiar el estado, le doy valor por defecto 1
 
@@ -26,9 +31,9 @@ const Home = () => {
         // if(error){
         //     return alert.error(error) //muestra el error
         // }
-        dispatch(getProducts(currentPage), keyword) //ejecutar la accion de obtener productos
+        dispatch(getProducts(currentPage), keyword, precio) //ejecutar la accion de obtener productos
         //alert.success('Ok. Listo') //mostrar alerta de que todo salio bien
-    }, [dispatch, currentPage, keyword]) //ver como un arregle el dispatch es un parametro que se pasa a la funcion
+    }, [dispatch, currentPage, keyword, precio]) //ver como un arregle el dispatch es un parametro que se pasa a la funcion
 
     function setCurrentPageNo(pageNumber){ //pagination asume y le pase un numero
         setCurrentPage(pageNumber) //traigo el state de la pagina actual y le asigno el numero de pagina que estoy
@@ -42,6 +47,25 @@ const Home = () => {
         <h1 id='encabezado_productos text-center'>Últimos productos</h1> 
         <section id="productos" className='container mt-5'>
                 <div className='row'>
+                <Slider //slider de precio
+                                range //para que sea un rango
+                                className='t-slider' //clase slider
+                                marks={{ //marks es para ponerle los valores al slider, arranca en 1000 y termina en 1000000
+                                    100: `$100`,
+                                    1000000: `$1000000`
+                                }}
+                                min={100} //valor minimo
+                                max={1000000} //valor maximo
+                                defaultValue={[100, 1000000]} //valor por defecto
+                                tipFormatter={value => `$${value}`}
+                                tipProps={{ //para que el tooltip se vea bien en el slider
+                                    placement: 'top', //posicion
+                                    prefixCls: 'rc-slider-tooltip', //accion a los clicks del slider
+                                    visible: true   //visible 
+                                }}
+                                value={precio}
+                                onChange={precio => setPrecio(precio)} //cuando se mueve el slider se ejecuta la funcion setPrecio
+                            ></Slider>
                     {productos && productos.map (producto => ( //traemos del objeto productos la data si productos existe, mapear los productos y retornarlos
                         <div key={producto._id} className='col-sm-12 col-md-6 col-lg-3 my-3'> {/*_id es el id de mongo, si encuentra 8 ids crea 8 cards y así*/}
                         <div className='card p-3 rounded'>
