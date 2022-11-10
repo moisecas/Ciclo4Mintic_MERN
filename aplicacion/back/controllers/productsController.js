@@ -166,17 +166,17 @@ exports.getProductReviews = catchAsyncErrors(async (req, res, next) => { //expor
 
 //Eliminar review
 exports.deleteReview = catchAsyncErrors(async (req, res, next) => {
-    const product = await producto.findById(req.query.idProducto);
+    const product = await producto.findById(req.query.idProducto); //busco un producto por id, el req.query.idProducto es el id que viene por la url, corresponde al producto que busco
 
-    const opi = product.opiniones.filter(opinion =>
-        opinion._id.toString() !== req.query.idReview.toString());
+    const opi = product.opiniones.filter(opinion => //filtro las opiniones, opinion es cada una de las opiniones
+        opinion._id.toString() !== req.query.idReview.toString()); //si el id de la opinion es diferente al id de la review que viene por la url, entonces lo elimino
 
-    const numCalificaciones = opi.length;
+    const numCalificaciones = opi.length;// el numero de calificaciones es igual al numero de opiniones que quedaron
 
-    const calificacion = opi.reduce((acc, Opinion) =>
-        Opinion.rating + acc, 0) / opi.length;
+    const calificacion = opi.reduce((acc, Opinion) => //calculo el promedio de las calificaciones, acc es el acumulador, Opinion es cada una de las opiniones
+        Opinion.rating + acc, 0) / opi.length; //el rating de cada una de las opiniones mas el acumulador, dividido por el numero de opiniones
 
-    await producto.findByIdAndUpdate(req.query.idProducto, {
+    await producto.findByIdAndUpdate(req.query.idProducto, { //actualizo el producto, el req.query.idProducto es el id que viene por la url, corresponde al producto que busco
         opi,
         calificacion,
         numCalificaciones
