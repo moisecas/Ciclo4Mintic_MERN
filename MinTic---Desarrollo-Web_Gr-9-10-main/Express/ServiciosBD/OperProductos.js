@@ -69,3 +69,16 @@ app.post('/modificarAll',( req , res ) =>{
        }) 
     res.send("se actualizo  todos los datos el dato ")
 })
+
+
+//crear producto
+
+app.post('/GuardarProducto', (req, res) => {
+    const {  nombre, stock, descripcion, valor, imagen } = req.body
+    console.log(id + " " + nombre + " " + stock + "" + descripcion + "" + valor + "" + imagen);
+    const producto = new esquemaProductos({ nombre, stock, descripcion, valor, imagen })
+    producto.save(function (err) {
+        if (err) return console.error(err);
+    })
+    res.send("se guardo el dato ") //responde al cliente
+})
