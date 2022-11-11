@@ -1,35 +1,45 @@
-import { //constantes que se importan de userConstants.js 
+
+
+import {
     LOGIN_REQUEST,
     LOGIN_SUCCESS,
     LOGIN_FAIL,
+    REGISTER_USER_REQUEST,
+    REGISTER_USER_SUCCESS,
+    REGISTER_USER_FAIL,
     CLEAR_ERRORS
 } from "../constants/userConstants"
 
-export const authReducer = (state = { user: {} }, action) => { //state es el estado inicial, action es la accion que se va a realizar
-    switch (action.type) { //me trae a un usuario con todos sus componentes y lo guarda en el estado
-        //dependiendo de lo que ocurra haga una accion
-        case LOGIN_REQUEST: //si el usuario se loguea correctamente
+export const authReducer = (state = { user: {} }, action) => {
+    switch (action.type) {
+
+        case LOGIN_REQUEST:
+        case REGISTER_USER_REQUEST: //si el usuario se loguea correctamente
             return {
-                loading: true, //cargando
-                isAuthenticated: false //aún no estoy autenticado
+                loading: true,
+                isAuthenticated: false
             }
+        
         case LOGIN_SUCCESS:
+        case REGISTER_USER_SUCCESS: 
             return {
-                ...state, 
-                loading: false,
-                isAuthenticated: true, //cambia a true porque ya estoy autenticado
-                user: action.payload //me trae a un usuario con todos sus componentes y lo guarda en el estado
+                ...state, //trae el estado actual
+                loading: false, //cambia el estado de loading a false para que no se quede cargando
+                isAuthenticated: true,  //cambia el estado de isAuthenticated a true para que sepa que esta logueado
+                user: action.payload //trae la data del usuario
             }
+            
         case LOGIN_FAIL:
-            return { //si el usuario no se loguea correctamente
-                ...state, //devuelve el estado anterior
+        case REGISTER_USER_FAIL:
+            return {
+                ...state,
                 loading: false,
-                isAuthenticated: false, //no estoy autenticado, falle
-                user: null, //no hay usuario
-                error: action.payload //me trae el error
+                isAuthenticated: false,
+                user: null,
+                error: action.payload
             }
         case CLEAR_ERRORS:
-            return { //limpiar errores para que no se queden en el estado
+            return {
                 ...state,
                 error: null
             }

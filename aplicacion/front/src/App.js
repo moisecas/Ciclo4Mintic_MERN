@@ -9,6 +9,7 @@ import ProductList from './components/admin/ProductList';
 import NewProduct from './components/admin/NewProduct';
 import Cart from './components/cart/Cart';
 import { Login } from './components/user/Login';
+import { Register } from './components/user/Register';
 
 
 import {BrowserRouter as Router, Routes,Route} from 'react-router-dom'; //importar el router del dom
@@ -34,6 +35,7 @@ function App() {
           <Route path="/search/:keyword" element={<Home />}/> {/* llama al home para la busqueda de productos pues ahí se ancla la keyword */}
           <Route path="/cart" element={<Cart />}/>   {/* en la ruta localhost:3000/cart muestre el componente cart ruta de cart */}
           <Route path="/login" element={<Login />} />
+          <Route path="/register" element= {<Register />} />
         </Routes> 
         </div> 
         
