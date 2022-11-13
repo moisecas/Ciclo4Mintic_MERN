@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
 import Home from './components/Home';
@@ -10,6 +10,10 @@ import NewProduct from './components/admin/NewProduct';
 import Cart from './components/cart/Cart';
 import { Login } from './components/user/Login';
 import { Register } from './components/user/Register';
+import { loadUser } from './actions/userActions';
+import store from "./store"
+import { Profile } from './components/user/Profile';
+import ProtectedRoute from './routes/ProtectedRoute';
 
 
 import {BrowserRouter as Router, Routes,Route} from 'react-router-dom'; //importar el router del dom
@@ -17,6 +21,11 @@ import {BrowserRouter as Router, Routes,Route} from 'react-router-dom'; //import
 
 
 function App() {
+
+  useEffect(()=>{ //creo un efecto que se ejecuta cuando se monta el componente
+    store.dispatch(loadUser()) //ejecuto la acción de cargar el usuario
+   },[])
+
   return (
     <Router>
       
@@ -33,9 +42,15 @@ function App() {
           <Route path="/productList" element={<ProductList />}/>   {/* en la ruta localhost:3000/productList muestre el componente productList ruta de productList */}
           <Route path="/newProduct" element={<NewProduct />}/>   {/* en la ruta localhost:3000/newProduct muestre el componente newProduct ruta de newProduct */}
           <Route path="/search/:keyword" element={<Home />}/> {/* llama al home para la busqueda de productos pues ahí se ancla la keyword */}
-          <Route path="/cart" element={<Cart />}/>   {/* en la ruta localhost:3000/cart muestre el componente cart ruta de cart */}
+          <Route path="/cart" element={<Cart />}/>   {/* en la ruta localhost:4000/cart muestre el componente cart ruta de cart */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element= {<Register />} />
+          <Route path="/yo" element={<Profile />}/>  {/* en la ruta localhost:4000/yo muestre el componente profile ruta de profile */}
+        
+          {/*Ruta protegida*/}
+          <Route path="/dashboard"  //ruta protegida el children es el componente que se muestra si se cumple la condición
+            element={<ProtectedRoute isAdmin={true}><Dashboard /></ProtectedRoute>}/>
+
         </Routes> 
         </div> 
         

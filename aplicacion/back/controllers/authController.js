@@ -24,7 +24,7 @@ exports.registroUsuario = catchAsyncErrors (async (req, res, next) => { //regist
         password,
         avatar:{
             public_id:result.public_id, //cargue la imagen a cloudinary y me devuelve un id publico
-            url:result.secure_url
+            url:result.secure_url //cargue la imagen a cloudinary y me devuelve una url segura
         }
     })
     tokenEnviado(user,201,res) //envia el token al navegador, recibe user, statusCode, res
