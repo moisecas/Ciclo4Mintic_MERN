@@ -14,6 +14,10 @@ import { loadUser } from './actions/userActions';
 import store from "./store"
 import { Profile } from './components/user/Profile';
 import ProtectedRoute from './routes/ProtectedRoute';
+import { UpdateProfile} from "./components/user/UpdateProfile"
+import { UpdatePassword } from './components/user/UpdatePassword';
+import { ForgotPassword } from "./components/user/ForgotPassword"
+import { NewPassword } from './components/user/NewPassword';
 
 
 import {BrowserRouter as Router, Routes,Route} from 'react-router-dom'; //importar el router del dom
@@ -38,7 +42,6 @@ function App() {
           <Route path={"/"} element={<Home />} /> {/* en la ruta localhost:3000/home o / muestre el componente home ruta de home */}
           <Route path={"/home"} element={<Home />} />
           <Route path={"/producto/:id"} element={<ProductDetails />} /> {/* en la ruta localhost:3000/product/:id muestre el componente productDetails ruta de productDetails */}
-          <Route path="/dashboard" element={<Dashboard />}/> {/* en la ruta localhost:3000/dashboard muestre el componente dashboard ruta de dashboard */}
           <Route path="/productList" element={<ProductList />}/>   {/* en la ruta localhost:3000/productList muestre el componente productList ruta de productList */}
           <Route path="/newProduct" element={<NewProduct />}/>   {/* en la ruta localhost:3000/newProduct muestre el componente newProduct ruta de newProduct */}
           <Route path="/search/:keyword" element={<Home />}/> {/* llama al home para la busqueda de productos pues ahí se ancla la keyword */}
@@ -46,7 +49,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element= {<Register />} />
           <Route path="/yo" element={<Profile />}/>  {/* en la ruta localhost:4000/yo muestre el componente profile ruta de profile */}
-        
+          <Route path="/yo/update" element={<UpdateProfile />}/>
+          <Route path="/password/update" element={<UpdatePassword />}/>
+          <Route path="/password/forgot" element={<ForgotPassword />}/>
+          <Route path="/resetPassword/:token" element={<NewPassword />}/>
+
           {/*Ruta protegida*/}
           <Route path="/dashboard"  //ruta protegida el children es el componente que se muestra si se cumple la condición
             element={<ProtectedRoute isAdmin={true}><Dashboard /></ProtectedRoute>}/>

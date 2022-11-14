@@ -90,9 +90,9 @@ export const authReducer = (state = { user: {} }, action) => {
     }
 }
 
-//Actualizar usuario, actualizar contraseña
+//Actualizar usuario, actualizar contraseña, usuario que supero el login
 export const userReducer = ( state = {}, action) =>{
-    switch (action.type){
+    switch (action.type){ //cada uno de sus cambios es una acción diferente que se ejecuta en el reducer
         case UPDATE_PROFILE_REQUEST:
         case UPDATE_PASSWORD_REQUEST:
             return {
@@ -103,33 +103,33 @@ export const userReducer = ( state = {}, action) =>{
         case UPDATE_PROFILE_SUCCESS:
         case UPDATE_PASSWORD_SUCCESS:
             return{
-                ...state,
-                loading:false,
-                isUpdated: action.payload
+                ...state, //retorna el estado actual
+                loading:false, //no carga porque ya alguien se logueo 
+                isUpdated: action.payload 
             }
         
-        case UPDATE_PROFILE_RESET:
+        case UPDATE_PROFILE_RESET: //si el usuario se desloguea correctamente
         case UPDATE_PASSWORD_RESET:
             return{
                 ...state,
-                isUpdated: false
+                isUpdated: false //no esta cargando porque ya alguien se logueo
             }
         
         case UPDATE_PROFILE_FAIL:
         case UPDATE_PASSWORD_FAIL:
             return{
                 ...state,
-                loading:false,
-                error: action.payload
+                loading:false, //no me carga nada y puede enviarme un error
+                error: action.payload //retorna el error
             }
         case CLEAR_ERRORS:
-            return{
+            return{ //limpieza de errores
                 ...state,
                 error:null
             }
         
         default:
-            return state
+            return state //retorna el estado actual
         
     }
 }

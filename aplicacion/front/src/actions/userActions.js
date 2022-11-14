@@ -96,16 +96,16 @@ export const loadUser=()=> async(dispatch) =>{
 
 
 //ACTUALIZAR USUARIO
-export const updateProfile = (userData) => async (dispatch) => {
+export const updateProfile = (userData) => async (dispatch) => { //userdata es el objeto que contiene los datos del usuario
     try {
         dispatch({ type: UPDATE_PROFILE_REQUEST})
 
         const config={
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data' //multipart/form-data es para enviar archivos
             }
         }
-        const {data} = await axios.put('/api/yo/updateProfile', userData, config)
+        const {data} = await axios.put('/api/yo/updateProfile', userData, config) //ruta del back
 
         dispatch({
             type: UPDATE_PROFILE_SUCCESS,

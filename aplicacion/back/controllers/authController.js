@@ -82,7 +82,7 @@ exports.forgotPassword = catchAsyncErrors (async (req, res, next) => {
     await user.save({validateBeforeSave: false}) //guarda el usuario con el token de reseteo de contraseña, y no valida los campos
 
     //crear una url para hacer el reseteo de la contraseña
-    const resetUrl= `${req.protocol}://${req.get("host")}/api/resetPassword/${resetToken}`; //crea una url con el protocolo, el host, y el reset token
+    const resetUrl= `${req.protocol}://${req.get("host")}/resetPassword/${resetToken}`; //crea una url con el protocolo, el host, y el reset token
     //enviar el correo con la url, capture el protocolo, host que tenemos, y ruta reset token
 
     const message = `Su contraseña ha sido reseteada. Haga click en 
@@ -172,6 +172,22 @@ exports.updateProfile = catchAsyncErrors (async (req, res, next) => { //recibe 3
         email: req.body.email //lo que esta en el body
     }
     //actualizar avatar
+    if (req.body.avatar !==""){ //si en el front es diferente a vacio el avatar
+        const user= await User.findById(req.user.id) //cree una const user y busque un usuario por el id del usuario que viene en el req user, cookie
+        const image_id= user.avatar.public_id; //cree una const image_id y busque el avatar 
+        const res= await cloudinary.v2.uploader.destroy(image_id); //destruir el id de la imagen que existe
+
+        const result= await cloudinary.v2.uploader.upload(req.body.avatar, { //subir la imagen que viene en el body
+            folder: "avatars", //como nombre la carpeta en cloudinary
+            width: 240,
+            crop: "scale"
+        })
+
+        newUserData.avatar={ //creo un nuevo objeto con la informacion del avatar
+            public_id: result.public_id,
+            url: result.secure_url
+        }
+    }
 
     const user = await User.findByIdAndUpdate(req.user.id, newUserData, { //id, nuevainfo, busca un usuario por el id del usuario que viene en el req user, cookie, y actualiza la informacion del usuario con la informacion que viene en el req body
         new: true, //retorna el usuario actualizado
