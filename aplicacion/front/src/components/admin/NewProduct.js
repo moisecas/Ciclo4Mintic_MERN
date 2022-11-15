@@ -50,8 +50,8 @@ const NewProduct = () => {
     }, [dispatch, error, success])
 
     const submitHandler = (e) => { //funcion que se ejecuta cuando se envia el formulario
-        e.preventDefault();
-
+        e.preventDefault(); //evita que se recargue la pagina
+        //seteamos los datos del producto a crear en un objeto
         const formData = new FormData();
         formData.set("nombre", nombre);
         formData.set("precio", precio)
@@ -61,25 +61,25 @@ const NewProduct = () => {
         formData.set("vendedor", vendedor)
 
         imagen.forEach(img => {
-            formData.append("imagen", img)
+            formData.append("imagen", img)//agregamos las imagenes al objeto
         })
 
-        dispatch(newProduct(formData))
+        dispatch(newProduct(formData)) //llamado al metodo newProduct del productActions, la información que necesita esta en el formData
     }
 
-    const onChange = e => {
+    const onChange = e => { //funcion que se ejecuta cuando se selecciona una imagen
         const files = Array.from(e.target.files)
 
-        setImagenPreview([])
-        setImagen([])
+        setImagenPreview([]) //seteamos el preview de las imagenes a vacio
+        setImagen([]) //se van a guardar las imagenes en un array
 
         files.forEach(file => {
-            const reader = new FileReader();
+            const reader = new FileReader(); //cree un lector de archivos
 
-            reader.onload = () => {
-                if (reader.readyState === 2) {
-                    setImagenPreview(oldArray => [...oldArray, reader.result])
-                    setImagen(oldArray => [...oldArray, reader.result])
+            reader.onload = () => { //cargo la imagen
+                if (reader.readyState === 2) { //si el lector esta listo
+                    setImagenPreview(oldArray => [...oldArray, reader.result]) //seteamos el preview de las imagenes
+                    setImagen(oldArray => [...oldArray, reader.result]) //seteamos las imagenes
                 }
             }
             reader.readAsDataURL(file)
@@ -175,15 +175,15 @@ const NewProduct = () => {
                                             name='product_images'
                                             className='custom-file-input'
                                             id='customFile'
-                                            onChange={onChange}
+                                            onChange={onChange} //cada vez que se selecciona una imagen se ejecuta la funcion onChange
                                             multiple
                                         />
                                         <label className='custom-file-label' htmlFor='customFile'>
                                             Seleccione Imagen
                                         </label>
                                     </div>
-                                    {imagenPreview.map(img => (
-                                        <img src={img} key={img} alt="Vista Previa de la imagen"
+                                    {imagenPreview.map(img => ( //recorre el array de imagenes y crea una imagen por cada imagen
+                                        <img src={img} key={img} alt="Vista Previa de la imagen" //seleccionando una de ellas se setea la imagen en el estado
                                             className='mt-3 mr-2' width="55" height="55" />
                                     ))}
 
