@@ -8,6 +8,7 @@ import { logout} from "../../actions/userActions"
 
 const Header = () => {
     const {cartItems} = useSelector(state=>state.cart)
+    
     //const alert= useAlert();
     const dispatch= useDispatch();
 
@@ -22,7 +23,7 @@ const Header = () => {
             <nav className='navbar row'>
                 <div className='col-12 col-md-3'>
                     <div className='navbar-brand'>
-                        <Link to="/" ><img  className='logo' src="./logo.png" alt="Tehcenter"></img></Link>
+                        <Link to="/" ><img  className='logo' src="./logo.png" alt="TechcenterColombia"></img></Link>
                     </div>
                 </div>
 

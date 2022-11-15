@@ -4,42 +4,58 @@ import { ALL_PRODUCTS_REQUEST,
     PRODUCT_DETAILS_REQUEST,
     PRODUCT_DETAILS_SUCCESS,
     PRODUCT_DETAILS_FAIL,
-    CLEAR_ERRORS} from "../constants/productConstants";
+    CLEAR_ERRORS,
+    ADMIN_PRODUCTS_REQUEST,
+    ADMIN_PRODUCTS_SUCCESS,
+    ADMIN_PRODUCTS_FAIL,
+    NEW_PRODUCT_REQUEST,
+    NEW_PRODUCT_SUCCESS,
+    NEW_PRODUCT_FAIL,
+    NEW_PRODUCT_RESET
+} from "../constants/productConstants";
 
-export const productsReducer = (state ={ products: []}, action)=>{
-    switch(action.type){
-        case ALL_PRODUCTS_REQUEST:
-            return{
-                loading:true,
-                productos:[]
+export const productsReducer = (state = { products: [] }, action) => {
+    switch (action.type) {
+        case ALL_PRODUCTS_REQUEST: //puedo pasar las constantes si me sirve para mas de una accion
+        case ADMIN_PRODUCTS_REQUEST:
+            return {
+                loading: true,
+                products: []
             }
 
         case ALL_PRODUCTS_SUCCESS:
-            return{
-                loading:false,
-                productos: action.payload.products,
+            return {
+                loading: false,
+                products: action.payload.products,
                 productsCount: action.payload.productsCount,
                 resPerPage: action.payload.resPerPage,
-                filteredProductsCount: action.payload.filteredProductsCount //cuente cuantos productos hay en la busqueda
+                filteredProductsCount: action.payload.filteredProductsCount
+            }
+        
+        case ADMIN_PRODUCTS_SUCCESS: //siempre que se haga una peticion de productos, se va a actualizar el estado
+            return {
+                loading:false,
+                products:action.payload
             }
 
         case ALL_PRODUCTS_FAIL:
-            return{
-                loading:false,
+        case ADMIN_PRODUCTS_FAIL:
+            return {
+                loading: false,
                 error: action.payload
             }
 
         case CLEAR_ERRORS:
-            return{
+            return {
                 ...state,
-                error:null
+                error: null
             }
-        
 
         default:
             return state;
     }
 }
+
 
 //REDUCER PARA TENER TODOS LOS DETALLES
 export const productDetailsReducer = (state = { product: {} }, action) => {
@@ -67,6 +83,44 @@ export const productDetailsReducer = (state = { product: {} }, action) => {
             return {
                 ...state,
                 error: null
+            }
+
+        default:
+            return state
+    }
+}
+
+export const newProductReducer = (state={ product:{} }, action )=>{
+    switch(action.type){
+
+        case NEW_PRODUCT_REQUEST:
+            return{
+                ...state,
+                loading: true
+            }
+
+        case NEW_PRODUCT_SUCCESS:
+            return {
+                loading: false,
+                success: action.payload.success,
+                product: action.payload.product
+            }
+
+        case NEW_PRODUCT_FAIL:
+            return{
+                ...state,
+                error:action.payload
+            }
+            
+        case NEW_PRODUCT_RESET:
+            return{
+                ...state,
+                success:false
+            }
+        case CLEAR_ERRORS:
+            return {
+                ...state,
+                error:null
             }
 
         default:

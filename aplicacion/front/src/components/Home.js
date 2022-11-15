@@ -18,7 +18,7 @@ const Home = () => {
 
     const [currentPage, setCurrentPage] = useState(1) //para poder usar la paginacion y saber en que pagina estoy, declarar variable y se crea su metodo set, puedo cambiar el estado, le doy valor por defecto 1
 
-    const { loading, productos, resPerPage, productsCount } = useSelector(state => state.products) //desde el actions se trae estas variables 
+    const { loading, products, resPerPage, productsCount } = useSelector(state => state.products) //desde el actions se trae estas variables 
    
     //const alert = useAlert()  //lo inicializo 
 
@@ -41,77 +41,78 @@ const Home = () => {
 
   return (
     <Fragment>
-    {loading ? <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i> : ( //si esta cargando muestra el mensaje loading si no muestra el fragment de abajo 
-        <Fragment>
-        <MetaData title="Skins para personalcaizar" ></MetaData>
-        <h1 id='encabezado_productos text-center'>Últimos productos</h1> 
-        <section id="productos" className='container mt-5'>
-                <div className='row'>
-                <Slider //slider de precio
-                                range //para que sea un rango
-                                className='t-slider' //clase slider
-                                marks={{ //marks es para ponerle los valores al slider, arranca en 1000 y termina en 1000000
+            {loading ? <i class="fa fa-refresh fa-spin fa-3x fa-fw"></i> : (
+                <Fragment>
+                    <MetaData title="Skins personalizados"></MetaData>
+                    <h1 id="encabezado_productos">Ultimos Productos</h1>
+
+                    <section id="productos" className='container mt-5'>
+                        <div className='row'>
+                            <Slider
+                                range
+                                className='t-slider'
+                                marks={{
                                     100: `$100`,
                                     1000000: `$1000000`
                                 }}
-                                min={100} //valor minimo
-                                max={1000000} //valor maximo
-                                defaultValue={[100, 1000000]} //valor por defecto
+                                min={100}
+                                max={1000000}
+                                defaultValue={[100, 1000000]}
                                 tipFormatter={value => `$${value}`}
-                                tipProps={{ //para que el tooltip se vea bien en el slider
-                                    placement: 'top', //posicion
-                                    prefixCls: 'rc-slider-tooltip', //accion a los clicks del slider
-                                    visible: true   //visible 
+                                tipProps={{
+                                    placement: 'top',
+                                    prefixCls: 'rc-slider-tooltip',
+                                    visible: true
                                 }}
                                 value={precio}
-                                onChange={precio => setPrecio(precio)} //cuando se mueve el slider se ejecuta la funcion setPrecio
+                                onChange={precio => setPrecio(precio)}
                             ></Slider>
-                    {productos && productos.map (producto => ( //traemos del objeto productos la data si productos existe, mapear los productos y retornarlos
-                        <div key={producto._id} className='col-sm-12 col-md-6 col-lg-3 my-3'> {/*_id es el id de mongo, si encuentra 8 ids crea 8 cards y así*/}
-                        <div className='card p-3 rounded'>
-                            <img className='card-img-top mx-auto' src={producto.imagen[0].url} alt={producto.imagen[0].public_id}></img> {/*mapendo o recorriendo el arreglo de imagen para asignarla al html y mostrar / imagen es un arreglo de objetos, url es la url de la imagen y public_id es el id de la imagen*/}
-                            <div className='card-body d-flex flex-column'>
-                                <h5 id="titulo_producto"><Link to={`/producto/${producto._id}`}>{producto.nombre}</Link></h5>
-                                <div className='rating mt-auto'>
-                                    <div className='rating-outer'>
-                                        <div className='rating-inner' style={{width: `${(producto.calificacion/5)*100}%`}}></div> {/*calificacion es un numero de 1 a 5, se multiplica por 100 para obtener el porcentaje, la clase por si sola sabe cuantas estrellas eliminar o dejar*/}
+
+                            {products && products.map(producto => (
+                                <div key={producto._id} className='col-sm-12 col-md-6 col-lg-3 my-3'>
+                                    <div className='card p-3 rounded'>
+                                        <img className='card-img-top mx-auto' src={producto.imagen[0].url} alt={producto.imagen[0].public_id}></img>
+                                        <div className='card-body d-flex flex-column'>
+                                            <h5 id="titulo_producto"><Link to={`/producto/${producto._id}`}>{producto.nombre}</Link></h5>
+                                            <div className='rating mt-auto'>
+                                                <div className='rating-outer'>
+                                                    <div className='rating-inner' style={{ width: `${(producto.calificacion / 5) * 100}%` }}></div>
+                                                </div>
+                                                <span id="No_de_opiniones"> {producto.numCalificaciones} Reviews</span>
+                                            </div>
+                                            <p className='card-text'>${producto.precio}</p><Link to={`/producto/${producto._id}`} id="view_btn" className='btn btn-block'>
+                                                Ver detalle
+                                            </Link>
+                                        </div>
                                     </div>
-                                    <span id="No_de_opiniones"> {producto.numCalificaciones} Reviews</span> {/*numCalificaciones es el numero de calificaciones que tiene el producto*/}
                                 </div>
-                                <p className='card-text'>${producto.precio}</p><Link to={`/producto/${producto._id}`} id="view_btn" className='btn btn-block'>
-                                    Ver detalle
-                                </Link> {/*precio es el precio del producto, va hasta la ruta y trae el dato*/}
-                            </div>
-                        </div> 
-                    </div>
 
-                    ))}
-                    </div>
-            </section>
+                            ))}
+                        </div>
+                    </section>
 
-            <div className='d-flex justify-content-center mt-5'> {/*para poder usar la paginacion*/}
-            <Pagination
-                        activePage={currentPage} //pagina actual
-                        itemsCountPerPage={resPerPage} //resultados por pagina
-                        totalItemsCount={productsCount} //total de productos
-                        onChange={setCurrentPageNo} //funcion para cambiar de pagina
-                        nextPageText={'Siguiente'} //texto de la pagina siguiente
-                        prevPageText={'Anterior'} //texto de la pagina anterior
-                        firstPageText={'Primera'} //texto de la primera pagina
-                        lastPageText={'Ultima'} //texto de la ultima pagina
-                        itemClass='page-item' // clase de la pagina viene de bootstrap
-                        linkClass='page-link'// clase del link, cuando se hace click en la pagina viene de bootstrap
+                    <div className='d-flex justify-content-center mt-5'>
+                        <Pagination
+                            activePage={currentPage}
+                            itemsCountPerPage={resPerPage}
+                            totalItemsCount={productsCount}
+                            onChange={setCurrentPageNo}
+                            nextPageText={'Siguiente'}
+                            prevPageText={'Anterior'}
+                            firstPageText={'Primera'}
+                            lastPageText={'Ultima'}
+                            itemClass='page-item'
+                            linkClass='page-link'
                         />
-            </div>
+                    </div>
 
-            </Fragment>
-    )}
-    
+                </Fragment>
+
+            )}
 
 
-
-    </Fragment>
-  )
+        </Fragment>
+    )
 }
 
 export default Home 

@@ -3,7 +3,7 @@ const router = express.Router(); //creamos un router, para crear rutas
 
 const {getProducts, newProduct,getProductById,updateProduct,
     deleteProduct,createProductReview,
-    getProductReviews,deleteReview} = require('../controllers/productsController'); //importamos los metodos del controlador, creando el servicio
+    getProductReviews,deleteReview,getAdminProducts} = require('../controllers/productsController'); //importamos los metodos del controlador, creando el servicio
 const { isAuthenticatedUser,authorizeRoles } = require('../middleware/auth'); //importamos los metodos del middleware de autenticacion
 
 
@@ -18,6 +18,7 @@ router.route('/producto/:id').delete(isAuthenticatedUser, authorizeRoles("admin"
 router.route("/review").put(isAuthenticatedUser, createProductReview) //creamos la ruta, put es para actualizar, route es para crear una ruta, createProductReview es el metodo que vamos a ejecutar, en el controlador se que necesita mi ruta para el json de prueba 
 router.route("/reviews").get(isAuthenticatedUser, getProductReviews) //creamos la ruta, get es para obtener, route es para crear una ruta, getProductReviews es el metodo que vamos a ejecutar, en el controlador se que necesita mi ruta para el json de prueba
 router.route("/review").delete(isAuthenticatedUser, deleteReview) //creamos la ruta, delete es para eliminar, route es para crear una ruta, deleteReview es el metodo que vamos a ejecutar, en el controlador se que necesita mi ruta para el json de prueba
+router.route('/admin/productos').get(isAuthenticatedUser, authorizeRoles("admin"), getAdminProducts); //establecemos la ruta
 
 
 module.exports = router; //exportamos el modulo para que lo pueda usar el server 
