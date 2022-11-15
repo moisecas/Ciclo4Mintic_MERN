@@ -56,26 +56,26 @@ export const getAdminProducts = () => async (dispatch) => {
     }
 }
 //NUEVO PRODUCTO -ADMIN
-export const newProduct = ( productData ) => async (dispatch)=>{
+export const newProduct = ( productData ) => async (dispatch)=>{ //recibe productData que es el producto que se va a crear, form data
     try {
-        dispatch({type: NEW_PRODUCT_REQUEST})
+        dispatch({type: NEW_PRODUCT_REQUEST}) //en caso de que todo salga bien, se va a ejecutar el dispatch
 
-        const config ={ 
+        const config ={  //configuracion para el header
             header: { 
-                'Content-Type':'application/json'
+                'Content-Type':'application/json' //el tipo de contenido es json 
             }
         }
 
-        const {data} = await axios.post('/api/producto/nuevo', productData, config)
+        const {data} = await axios.post('/api/producto/nuevo', productData, config) //traemos la información del producto nuevo
 
         dispatch({
-            type: NEW_PRODUCT_SUCCESS,
-            payload: data
+            type: NEW_PRODUCT_SUCCESS, //el type es el que se va a ejecutar, all products success es el que se va a ejecutar
+            payload: data //el payload es la informacion que se va a traer que es data.products
         })
-    }catch(error){
+    }catch(error){ //en caso de error
         dispatch({
             type: NEW_PRODUCT_FAIL,
-            payload: error.response.data.message
+            payload: error.response.data.message 
         })
     }
 }

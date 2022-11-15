@@ -90,34 +90,34 @@ export const productDetailsReducer = (state = { product: {} }, action) => {
     }
 }
 
-export const newProductReducer = (state={ product:{} }, action )=>{
-    switch(action.type){
+export const newProductReducer = (state={ product:{} }, action )=>{ //va a generar un estado, productos llegan en json
+    switch(action.type){ //creamos un switch para evaluar el tipo de accion que se va a realizar con los casos
 
         case NEW_PRODUCT_REQUEST:
             return{
-                ...state,
-                loading: true
+                ...state, //neceista si o si un estado
+                loading: true //cargando
             }
 
         case NEW_PRODUCT_SUCCESS:
             return {
-                loading: false,
-                success: action.payload.success,
-                product: action.payload.product
+                loading: false, //cargando
+                success: action.payload.success, //si se creo el producto
+                product: action.payload.product //el producto creado
             }
 
         case NEW_PRODUCT_FAIL:
             return{
-                ...state,
-                error:action.payload
+                ...state, //neceista si o si un estado
+                error:action.payload //el error que se genero
             }
             
         case NEW_PRODUCT_RESET:
             return{
                 ...state,
-                success:false
+                success:false //false por que no se creo el producto
             }
-        case CLEAR_ERRORS:
+        case CLEAR_ERRORS://limpiar errores
             return {
                 ...state,
                 error:null
