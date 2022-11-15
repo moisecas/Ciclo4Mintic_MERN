@@ -16,6 +16,7 @@ const root = ReactDOM.createRoot(document.getElementById('root')); // creamos el
 root.render(
   <Provider store={store}> {/* proveedor de redux, se alimenta de la tienda que importamos */}
     <AlertProvider template={AlertTemplate} {...options}> {/* se alimentan de options, proveedor de react-alert, se alimenta del template que importamos y las opciones que creamos */}
+      <App /> {/* componente de react, proveedor de servicios */}
     </AlertProvider> {/* para que funcionen las alertas */} 
     <App /> {/* componente de react, proveedor de servicios */}
   </Provider>

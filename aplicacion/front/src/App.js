@@ -45,7 +45,7 @@ function App() {
           <Route path="/productList" element={<ProductList />}/>   {/* en la ruta localhost:3000/productList muestre el componente productList ruta de productList */}
           <Route path="/newProduct" element={<NewProduct />}/>   {/* en la ruta localhost:3000/newProduct muestre el componente newProduct ruta de newProduct */}
           <Route path="/search/:keyword" element={<Home />}/> {/* llama al home para la busqueda de productos pues ahí se ancla la keyword */}
-          <Route path="/cart" element={<Cart />}/>   {/* en la ruta localhost:4000/cart muestre el componente cart ruta de cart */}
+          <Route path="/carrito" element={<Cart />}/>   {/* en la ruta localhost:4000/cart muestre el componente cart ruta de cart */}
           <Route path="/login" element={<Login />} />
           <Route path="/register" element= {<Register />} />
           <Route path="/yo" element={<Profile />}/>  {/* en la ruta localhost:4000/yo muestre el componente profile ruta de profile */}

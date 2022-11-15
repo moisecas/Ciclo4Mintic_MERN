@@ -1,26 +1,28 @@
 import React, { Fragment } from 'react'
-import { Link } from 'react-router-dom'
-import Search from './Search'
+import "../../App.css"
+import { Link } from "react-router-dom"
+import { Search } from './Search'
 import { useDispatch, useSelector } from 'react-redux'
 //import { useAlert } from 'react-alert'
 import { logout} from "../../actions/userActions"
-const Header = () => {
 
+const Header = () => {
+    const {cartItems} = useSelector(state=>state.cart)
     //const alert= useAlert();
     const dispatch= useDispatch();
 
-    const { user, loading } = useSelector(state => state.auth) //auth es el nombre del reducer del store
+    const { user, loading } = useSelector(state => state.auth)
 
-    const logoutHandler = () =>{ //funcion para cerrar sesion
-        dispatch(logout()); //ejecuto la acción de logout que viene del userActions
-        //alert.success("LogOut exitoso") 
+    const logoutHandler = () =>{
+        dispatch(logout());
+        //alert.success("LogOut exitoso")
     }
-  return (
-    <Fragment>
+    return (
+        <Fragment>
             <nav className='navbar row'>
                 <div className='col-12 col-md-3'>
                     <div className='navbar-brand'>
-                        <Link to="/" ><img className='logo' src="./logo.png" alt="TechcenterColombia"></img></Link>
+                        <Link to="/" ><img  className='logo' src="./logo.png" alt="Tehcenter"></img></Link>
                     </div>
                 </div>
 
@@ -31,33 +33,33 @@ const Header = () => {
                 {/*Boton inicio sesión*/}
                 <div className="col-12 col-md-4 mt-4 mt-md-0 text-center">
                     <Link to="/carrito"><i class="fa fa-shopping-cart fa-2x text-white" aria-hidden="false"></i>
-                        <span className="ml-1" id="cart_count">2</span></Link>
+                        <span className="ml-1" id="cart_count">{cartItems.length}</span></Link>
 
-                    {user ? ( //si el usuario existe muestre el dropdown
+                    {user ? (
                         <div className="ml-4 dropdown d-inline">
                             <Link to="#!" className="btn dropdown-toggle text-white mr-4" type="button"
                                 id="dropDownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <figure className='avatar avatar-nav'> {/*avatar es una clase de font awesome*/} 
-                                    <img //si el usuario tiene una imagen de perfil la muestre
-                                        src={user.avatar && user.avatar.url} //si el usuario tiene una imagen de perfil la muestre
-                                        alt={user && user.nombre} //src de la imagen alt del usuario
+                                <figure className='avatar avatar-nav'>
+                                    <img
+                                        src={user.avatar && user.avatar.url}
+                                        alt={user && user.nombre}
                                         className="rounded-circle"></img>
                                 </figure>
-                                <span>{user && user.nombre}</span> {/*si el usuario existe muestre su nombre*/}
+                                <span>{user && user.nombre}</span>
                             </Link>
                             <div className='dropdown-menu' aria-labelledby='dropDownMenu'>
                                 {/*Preguntamos el rol de quien esta online*/}
-                                {user && user.role === "admin" && ( //si el usuario existe y es admin muestre el link
+                                {user && user.role === "admin" && (
                                     <Link className="dropdown-item" to="/dashboard">Adm. Productos</Link>
                                 )}
 
                                 <Link className="dropdown-item" to="/">Pedidos</Link>
-                                <Link className="dropdown-item" to="/yo">Mi Perfil</Link> {/*link a mi perfil app js*/} 
+                                <Link className="dropdown-item" to="/yo">Mi Perfil</Link>
                                 <Link className="dropdown-item" to="/" onClick={logoutHandler}>Cerrar Sesion</Link>
                             </div>
                         </div>
                     ) : !loading && <Link to="/login" className='btn ml-4' id="login_btn">Login</Link>}
-                        {/*si el usuario no existe muestre el boton de login*/}
+
 
                 </div>
 
