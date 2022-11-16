@@ -13,7 +13,13 @@ import {
     ADMIN_PRODUCTS_FAIL,
     NEW_PRODUCT_REQUEST,
     NEW_PRODUCT_SUCCESS,
-    NEW_PRODUCT_FAIL
+    NEW_PRODUCT_FAIL,
+    DELETE_PRODUCT_SUCCESS,
+    DELETE_PRODUCT_FAIL,
+    DELETE_PRODUCT_REQUEST,
+    UPDATE_PRODUCT_REQUEST,
+    UPDATE_PRODUCT_SUCCESS,
+    UPDATE_PRODUCT_FAIL
 } from '../constants/productConstants';
 
 export const getProducts = (currentPage =1, keyword='') => async(dispatch)=>{ //currentPage es la pagina actual, keyword es la palabra que se busca
@@ -94,6 +100,50 @@ export const getProductDetails = (id) => async(dispatch)=>{
     }catch (error){
         dispatch({
             type:PRODUCT_DETAILS_FAIL,
+            payload: error.response.data.message
+        })
+    }
+}
+
+//Eliminar un producto (admin)
+export const deleteProduct = (id) => async(dispatch)=>{ //recibe el id del producto que se va a eliminar
+    try{//en caso de que todo salga bien, se va a ejecutar el dispatch
+        dispatch ({type: DELETE_PRODUCT_REQUEST})//el dispatch que contiene el type y el payload
+        const {data} = await axios.delete(`/api/producto/${id}`) //visitamos la ruta del producto que se va a eliminar
+
+        dispatch({
+            type: DELETE_PRODUCT_SUCCESS,
+            payload: data.success
+        })
+    } catch(error){
+        dispatch({
+            type: DELETE_PRODUCT_FAIL,
+            payload: error.response.data.message
+        })
+    }
+}
+
+
+//update Product (admin)
+export const updateProduct = (id, productData) => async (dispatch) =>{ //recibe el id del producto que se va a actualizar y el productData que es el producto que se va a actualizar
+    try{
+        dispatch ({type: UPDATE_PRODUCT_REQUEST})
+
+        const config={
+            headers: { //viene desde el header de la request
+                "Content-Type": "application/json" //el tipo de contenido es json
+            }
+        }
+        const {data} = await axios.put(`/api/producto/${id}`, productData, config)//ruta dek backend, id del producto que se va a actualizar, productData que es el producto que se va a actualizar, config que es la configuracion del header
+
+        dispatch({ //despacha la accion que contiene el type y el payload
+            type: UPDATE_PRODUCT_SUCCESS,
+            payload: data.success
+        })
+        
+    } catch(error){
+        dispatch({
+            type: UPDATE_PRODUCT_FAIL,
             payload: error.response.data.message
         })
     }

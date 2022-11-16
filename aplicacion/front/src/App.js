@@ -5,7 +5,7 @@ import Footer from './components/layout/Footer';
 import Home from './components/Home';
 import { ProductDetails } from './components/products/ProductDetails';
 import { Dashboard } from './components/admin/Dashboard';
-import ProductList from './components/admin/ProductList';
+import ProductsList from './components/admin/ProductList';
 import NewProduct from './components/admin/NewProduct';
 import Cart from './components/cart/Cart';
 import { Login } from './components/user/Login';
@@ -18,6 +18,11 @@ import { UpdateProfile} from "./components/user/UpdateProfile"
 import { UpdatePassword } from './components/user/UpdatePassword';
 import { ForgotPassword } from "./components/user/ForgotPassword"
 import { NewPassword } from './components/user/NewPassword';
+import { UpdateProduct } from './components/admin/UpdateProduct';
+import { Shipping } from './components/cart/Shipping';
+import { ConfirmOrder } from './components/cart/ConfirmOrder';
+import { Payment } from './components/cart/Payment';
+import { Success } from './components/cart/Success'
 
 
 import {BrowserRouter as Router, Routes,Route} from 'react-router-dom'; //importar el router del dom
@@ -26,45 +31,57 @@ import {BrowserRouter as Router, Routes,Route} from 'react-router-dom'; //import
 
 function App() {
 
-  useEffect(()=>{ //creo un efecto que se ejecuta cuando se monta el componente
-    store.dispatch(loadUser()) //ejecuto la acción de cargar el usuario
-   },[])
+  useEffect(() => {
+    store.dispatch(loadUser())
+  }, []) 
 
   return (
     <Router>
-      
-    
-    <div className="App">
+      <div className="App">
         <Header />
-        {/* navegacion */}
-        <div className="container container-fluid">
-        <Routes>
-          <Route path={"/"} element={<Home />} /> {/* en la ruta localhost:3000/home o / muestre el componente home ruta de home */}
-          <Route path={"/home"} element={<Home />} />
-          <Route path={"/producto/:id"} element={<ProductDetails />} /> {/* en la ruta localhost:3000/product/:id muestre el componente productDetails ruta de productDetails */}
-          <Route path="/productList" element={<ProductList />}/>   {/* en la ruta localhost:3000/productList muestre el componente productList ruta de productList */}
-          <Route path="/newProduct" element={<NewProduct />}/>   {/* en la ruta localhost:3000/newProduct muestre el componente newProduct ruta de newProduct */}
-          <Route path="/search/:keyword" element={<Home />}/> {/* llama al home para la busqueda de productos pues ahí se ancla la keyword */}
-          <Route path="/carrito" element={<Cart />}/>   {/* en la ruta localhost:4000/cart muestre el componente cart ruta de cart */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element= {<Register />} />
-          <Route path="/yo" element={<Profile />}/>  {/* en la ruta localhost:4000/yo muestre el componente profile ruta de profile */}
-          <Route path="/yo/update" element={<UpdateProfile />}/>
-          <Route path="/password/update" element={<UpdatePassword />}/>
-          <Route path="/password/forgot" element={<ForgotPassword />}/>
-          <Route path="/resetPassword/:token" element={<NewPassword />}/>
+        <div className='container container-fluid'>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/Home" element={<Home />} />
+            <Route path="/producto/:id" element={<ProductDetails />} />
+            <Route path="/productList" element={<ProductsList />} />
+            <Route path="/nuevoProducto" element={<NewProduct />} />
+            <Route path="/search/:keyword" element={<Home />} />
+            <Route path="/carrito" element={<Cart />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/yo" element={<Profile />} />
+            <Route path="/yo/update" element={<UpdateProfile />} />
+            <Route path="/password/update" element={<UpdatePassword />} />
+            <Route path="/password/forgot" element={<ForgotPassword />} />
+            <Route path="/resetPassword/:token" element={<NewPassword />} />
 
-          {/*Ruta protegida*/}
-          <Route path="/dashboard"  //ruta protegida el children es el componente que se muestra si se cumple la condición
-            element={<ProtectedRoute isAdmin={true}><Dashboard /></ProtectedRoute>}/>
 
-        </Routes> 
-        </div> 
-        
-        
-        <Footer/>
+            {/*Ruta protegida*/}
+            <Route path="/dashboard"
+              element={<ProtectedRoute isAdmin={true}><Dashboard /></ProtectedRoute>} />
 
-    </div>
+            <Route path="/updateProduct/:id"
+              element={<ProtectedRoute isAdmin={true}><UpdateProduct /></ProtectedRoute>} />
+
+            <Route path="/shipping"
+              element={<ProtectedRoute><Shipping /></ProtectedRoute>} />
+
+            <Route path="/order/confirm"
+              element={<ProtectedRoute><ConfirmOrder /></ProtectedRoute>} />
+
+            <Route path="/payment"
+              element={<ProtectedRoute><Payment /></ProtectedRoute>} />
+
+            <Route path="/success"
+              element={<ProtectedRoute><Success /></ProtectedRoute>} />
+
+
+
+          </Routes>
+        </div>
+        <Footer />
+      </div>
     </Router>
   );
 }

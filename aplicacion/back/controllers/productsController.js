@@ -5,6 +5,7 @@ const ErrorHandler = require('../utils/errorHandler'); //importo el modulo de er
 const catchAsyncErrors = require("../middleware/catchAsyncErrors");
 const APIFeatures = require("../utils/apiFeatures"); //importo el modulo de paginacion
 const fetch =(url)=>import('node-fetch').then(({default:fetch})=>fetch(url)); //importamos el fetch de node-fetch 
+const cloudinary=require("cloudinary") 
 
 //ver lista de productos 
 exports.getProducts = catchAsyncErrors (async (req, res, next) => { //trabaja con un requisito, una respuesta y un next, ejecute una acción al terminar
@@ -66,23 +67,69 @@ exports.getProductById = catchAsyncErrors(async (req, res, next) => { //async pa
  //trabaja con un requisito, una respuesta y un next, ejecute una acción al terminar
 
 //actualizar producto
-exports.updateProduct = catchAsyncErrors (async (req, res, next) => { //async para que sea asincrono, req es el request, res es la respuesta, next es para que ejecute una acción al terminar
-    let product = await producto.findById(req.params.id); //buscamos un producto por id, el req.params.id es el id que viene por la url, corresponde al producto que busco
-
-    if (!product){
+//Update un producto
+exports.updateProduct = catchAsyncErrors(async (req, res, next) => {
+    let product = await producto.findById(req.params.id) //Variable de tipo modificable
+    if (!product) {
         return next(new ErrorHandler("Producto no encontrado", 404))
     }
+    let imagen=[] //crear un arreglo de imagenes
 
-    product = await producto.findByIdAndUpdate(req.params.id, req.body, { //el metodo necesita el id, el body que viene del front, y un objeto con las opciones
-        new: true, //devuelve el producto actualizado
-        runValidators: true //corre las validaciones del modelo
-    }) //actualizamos el producto, el req.params.id es el id que viene por la url, corresponde al producto que busco, el req.body es lo que viene del front, el {new: true, runValidators: true} es para que devuelva el producto actualizado y que corra las validaciones
+    if (typeof req.body.imagen=="string"){
+        imagen.push(req.body.imagen) //si la imagen es un string, la agrego al arreglo
+    }else{
+        imagen=req.body.imagen //
+    }
+    if (imagen!== undefined){ //si la imagen no es undefined elimino las imagenes anteriores
+        //eliminar imagenes asociadas con el product 
+        for (let i=0; i<product.imagen.lenght; i++){
+            const result= await cloudinary.v2.uploader.destroy(product.images[i].public_id)
+            //result es la respuesta de cloudinary destroy es un metodo de cloudinary para eliminar imagenes
+        }
+
+        let imageLinks=[]
+        for (let i=0; i<imagen.lenght; i++){
+            const result=await cloudinary.v2.uploader.upload(imagen[i],{ //subir imagen a cloudinary
+                folder:"products" //carpeta donde se guardan las imagenes en cloudinary
+            });
+            imageLinks.push({ //agregar la imagen al arreglo
+                public_id:result.public_id,
+                url: result.secure_url
+            })
+        }
+        req.body.imagen=imageLinks
+    }
+
+    //Si el objeto si existia, entonces si ejecuto la actualización
+    product = await producto.findByIdAndUpdate(req.params.id, req.body, {
+        new: true, //Valido solo los atributos nuevos o actualizados
+        runValidators: true
+    });
+    //Respondo Ok si el producto si se actualizó
     res.status(200).json({
         success: true,
-        message: 'Producto actualizado',
-        product  //producto actualizado 
-    }) //res status 200 es que todo esta bien, json es un objeto
+        message: "Producto actualizado correctamente",
+        product
+    })
 })
+
+// exports.updateProduct = catchAsyncErrors (async (req, res, next) => { //async para que sea asincrono, req es el request, res es la respuesta, next es para que ejecute una acción al terminar
+//     let product = await producto.findById(req.params.id); //buscamos un producto por id, el req.params.id es el id que viene por la url, corresponde al producto que busco
+
+//     if (!product){
+//         return next(new ErrorHandler("Producto no encontrado", 404))
+//     }
+
+//     product = await producto.findByIdAndUpdate(req.params.id, req.body, { //el metodo necesita el id, el body que viene del front, y un objeto con las opciones
+//         new: true, //devuelve el producto actualizado
+//         runValidators: true //corre las validaciones del modelo
+//     }) //actualizamos el producto, el req.params.id es el id que viene por la url, corresponde al producto que busco, el req.body es lo que viene del front, el {new: true, runValidators: true} es para que devuelva el producto actualizado y que corra las validaciones
+//     res.status(200).json({
+//         success: true,
+//         message: 'Producto actualizado',
+//         product  //producto actualizado 
+//     }) //res status 200 es que todo esta bien, json es un objeto
+// })
 
 
 //eliminar producto

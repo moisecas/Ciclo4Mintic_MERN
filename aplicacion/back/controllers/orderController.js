@@ -7,7 +7,7 @@ const ErrorHandler = require('../utils/errorHandler');
 exports.newOrder =  catchAsyncErrors (async (req, res, next) => {
     
         const {
-            Items,
+            items,
             envioInfo,
             precioItems,
             precioImpuesto,
@@ -17,7 +17,7 @@ exports.newOrder =  catchAsyncErrors (async (req, res, next) => {
         } = req.body; //en el body debe venir todo lo que necesitamos para crear la orden, en el front están los campos
 
         const order= await Order.create({
-            Items,
+            items,
             envioInfo,
             precioItems,
             precioImpuesto,

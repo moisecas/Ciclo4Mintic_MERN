@@ -11,7 +11,14 @@ import { ALL_PRODUCTS_REQUEST,
     NEW_PRODUCT_REQUEST,
     NEW_PRODUCT_SUCCESS,
     NEW_PRODUCT_FAIL,
-    NEW_PRODUCT_RESET
+    NEW_PRODUCT_RESET,
+    DELETE_PRODUCT_REQUEST,
+    DELETE_PRODUCT_SUCCESS,
+    DELETE_PRODUCT_FAIL,
+    UPDATE_PRODUCT_REQUEST,
+    UPDATE_PRODUCT_SUCCESS,
+    UPDATE_PRODUCT_FAIL,
+    UPDATE_PRODUCT_RESET,
 } from "../constants/productConstants";
 
 export const productsReducer = (state = { products: [] }, action) => {
@@ -124,6 +131,49 @@ export const newProductReducer = (state={ product:{} }, action )=>{ //va a gener
             }
 
         default:
+            return state
+    }
+}
+//eliminar producto 
+export const productReducer= (state = {}, action)=>{
+    switch(action.type){
+        case DELETE_PRODUCT_REQUEST: //si se esta eliminando
+        case UPDATE_PRODUCT_REQUEST: //si se esta actualizando
+            return{
+                ...state,  
+                loading:true
+            }
+        case DELETE_PRODUCT_SUCCESS: //evento de exito en la eliminacion
+            return{
+                ...state,
+                loading: false,
+                isDeleted: action.payload //si se elimino
+            }
+
+        case UPDATE_PRODUCT_SUCCESS:
+            return{
+                ...state,
+                loading: false, //cargando false por que ya se actualizo
+                isUpdated: action.payload //me va a decir si se actualizo
+            }
+            
+        case DELETE_PRODUCT_FAIL: //si hubo un error en la eliminacion
+        case UPDATE_PRODUCT_FAIL:
+            return{
+                ...state,
+                error: action.payload
+            }
+            
+        case UPDATE_PRODUCT_RESET:
+            return{
+                ...state, 
+                isUpdated: false //false por que no se actualizo
+            }
+        case CLEAR_ERRORS:
+            return {
+                error:null
+            }
+        default://si no se cumple ninguna de las anteriores
             return state
     }
 }
