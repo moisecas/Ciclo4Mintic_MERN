@@ -7,7 +7,7 @@ import {
     PRODUCT_DETAILS_REQUEST,
     PRODUCT_DETAILS_SUCCESS,
     PRODUCT_DETAILS_FAIL,
-    CLEAR_ERRORS, 
+    CLEAR_ERRORS,
     ADMIN_PRODUCTS_REQUEST,
     ADMIN_PRODUCTS_SUCCESS,
     ADMIN_PRODUCTS_FAIL,
@@ -19,97 +19,100 @@ import {
     DELETE_PRODUCT_REQUEST,
     UPDATE_PRODUCT_REQUEST,
     UPDATE_PRODUCT_SUCCESS,
+    NEW_REVIEW_REQUEST,
+    NEW_REVIEW_SUCCESS,
+    NEW_REVIEW_FAIL,
     UPDATE_PRODUCT_FAIL
 } from '../constants/productConstants';
 
-export const getProducts = (currentPage =1, keyword='') => async(dispatch)=>{ //currentPage es la pagina actual, keyword es la palabra que se busca
+export const getProducts = (currentPage = 1, keyword = '', precio) => async (dispatch) => {
     try {
-        dispatch({type: ALL_PRODUCTS_REQUEST})
+        dispatch({ type: ALL_PRODUCTS_REQUEST })
 
-        const {data} = await axios.get(`/api/productos?keyword=${keyword}&page=${currentPage}`) //palabra clave y luego la paginación
-        //debo traer la paginacion, link para que se aplique esa paginacion
+        let link = `/api/productos?keyword=${keyword}&page=${currentPage}&precio[gte]=${precio[0]}&precio[lte]=${precio[1]}`
 
-
-
+        const { data } = await axios.get(link)
 
         dispatch({
-            type:ALL_PRODUCTS_SUCCESS,
+            type: ALL_PRODUCTS_SUCCESS,
             payload: data
         })
-    }catch (error){
+    } catch (error) {
         dispatch({
-            type:ALL_PRODUCTS_FAIL,
+            type: ALL_PRODUCTS_FAIL,
             payload: error.response.data.message
         })
     }
 }
-//admin products
+
+//ADMIN - get products
 export const getAdminProducts = () => async (dispatch) => {
     try {
-        dispatch({ type: ADMIN_PRODUCTS_REQUEST }) //en caso de que todo salga bien, se va a ejecutar el dispatch
+        dispatch({ type: ADMIN_PRODUCTS_REQUEST })
 
-        const { data } = await axios.get('/api/admin/productos') //la informacion que se va a traer
+        const { data } = await axios.get('/api/admin/productos')
 
-        dispatch({ //se va a ejecutar el dispatch que contiene el type y el payload, para que llegue al front
-            type: ADMIN_PRODUCTS_SUCCESS, //el type es el que se va a ejecutar, all products success es el que se va a ejecutar
-            payload: data.products //el payload es la informacion que se va a traer que es data.products
+        dispatch({
+            type: ADMIN_PRODUCTS_SUCCESS,
+            payload: data.products
         })
     } catch (error) {
-        dispatch({ //todo estado debe tener un despacho de accion
-            type: ADMIN_PRODUCTS_FAIL, //en caso de que falle, se va a ejecutar el dispatch que contiene el type y el payload
-            payload: error.response.data.message //el payload es el mensaje de error
+        dispatch({
+            type: ADMIN_PRODUCTS_FAIL,
+            payload: error.response.data.message
         })
     }
 }
-//NUEVO PRODUCTO -ADMIN
-export const newProduct = ( productData ) => async (dispatch)=>{ //recibe productData que es el producto que se va a crear, form data
-    try {
-        dispatch({type: NEW_PRODUCT_REQUEST}) //en caso de que todo salga bien, se va a ejecutar el dispatch
 
-        const config ={  //configuracion para el header
+//NUEVO PRODUCTO -ADMIN
+export const newProduct = ( productData ) => async (dispatch)=>{
+    try {
+        dispatch({type: NEW_PRODUCT_REQUEST})
+
+        const config ={ 
             header: { 
-                'Content-Type':'application/json' //el tipo de contenido es json 
+                'Content-Type':'application/json'
             }
         }
 
-        const {data} = await axios.post('/api/producto/nuevo', productData, config) //traemos la información del producto nuevo
+        const {data} = await axios.post('/api/producto/nuevo', productData, config)
 
         dispatch({
-            type: NEW_PRODUCT_SUCCESS, //el type es el que se va a ejecutar, all products success es el que se va a ejecutar
-            payload: data //el payload es la informacion que se va a traer que es data.products
+            type: NEW_PRODUCT_SUCCESS,
+            payload: data
         })
-    }catch(error){ //en caso de error
+    }catch(error){
         dispatch({
             type: NEW_PRODUCT_FAIL,
-            payload: error.response.data.message 
+            payload: error.response.data.message
         })
     }
 }
 
 //VER DETALLE DEL PRODUCTO
-export const getProductDetails = (id) => async(dispatch)=>{
+export const getProductDetails = (id) => async (dispatch) => {
     try {
-        dispatch({type: PRODUCT_DETAILS_REQUEST})
+        dispatch({ type: PRODUCT_DETAILS_REQUEST })
 
-        const {data} = await axios.get(`/api/producto/${id}`)
+        const { data } = await axios.get(`/api/producto/${id}`)
 
         dispatch({
-            type:PRODUCT_DETAILS_SUCCESS,
+            type: PRODUCT_DETAILS_SUCCESS,
             payload: data.product
         })
-    }catch (error){
+    } catch (error) {
         dispatch({
-            type:PRODUCT_DETAILS_FAIL,
+            type: PRODUCT_DETAILS_FAIL,
             payload: error.response.data.message
         })
     }
 }
 
 //Eliminar un producto (admin)
-export const deleteProduct = (id) => async(dispatch)=>{ //recibe el id del producto que se va a eliminar
-    try{//en caso de que todo salga bien, se va a ejecutar el dispatch
-        dispatch ({type: DELETE_PRODUCT_REQUEST})//el dispatch que contiene el type y el payload
-        const {data} = await axios.delete(`/api/producto/${id}`) //visitamos la ruta del producto que se va a eliminar
+export const deleteProduct = (id) => async(dispatch)=>{
+    try{
+        dispatch ({type: DELETE_PRODUCT_REQUEST})
+        const {data} = await axios.delete(`/api/producto/${id}`)
 
         dispatch({
             type: DELETE_PRODUCT_SUCCESS,
@@ -125,18 +128,18 @@ export const deleteProduct = (id) => async(dispatch)=>{ //recibe el id del produ
 
 
 //update Product (admin)
-export const updateProduct = (id, productData) => async (dispatch) =>{ //recibe el id del producto que se va a actualizar y el productData que es el producto que se va a actualizar
+export const updateProduct = (id, productData) => async (dispatch) =>{
     try{
         dispatch ({type: UPDATE_PRODUCT_REQUEST})
 
         const config={
-            headers: { //viene desde el header de la request
-                "Content-Type": "application/json" //el tipo de contenido es json
+            headers: {
+                "Content-Type": "application/json"
             }
         }
-        const {data} = await axios.put(`/api/producto/${id}`, productData, config)//ruta dek backend, id del producto que se va a actualizar, productData que es el producto que se va a actualizar, config que es la configuracion del header
+        const {data} = await axios.put(`/api/producto/${id}`, productData, config)
 
-        dispatch({ //despacha la accion que contiene el type y el payload
+        dispatch({
             type: UPDATE_PRODUCT_SUCCESS,
             payload: data.success
         })
@@ -148,12 +151,38 @@ export const updateProduct = (id, productData) => async (dispatch) =>{ //recibe 
         })
     }
 }
+//registar una review
+export const newReview = (reviewData) => async (dispatch) => {
+    try {
+
+        dispatch({ type: NEW_REVIEW_REQUEST })
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }
+
+        const { data } = await axios.put(`/api/review`, reviewData, config)
+
+        dispatch({
+            type: NEW_REVIEW_SUCCESS,
+            payload: data.success
+        })
+
+    } catch (error) {
+        dispatch({
+            type: NEW_REVIEW_FAIL,
+            payload: error.response.data.message
+        })
+    }
+}
 
 
-
-// Clear errors
-export const clearErrors = () => async (dispatch) => { //funcion asincrona que recibe dispatch como parametro
+//clear error
+export const clearErrors = () => async (dispatch) => {
     dispatch({
         type: CLEAR_ERRORS
     })
-}; //limpiar errores
+} 
+
