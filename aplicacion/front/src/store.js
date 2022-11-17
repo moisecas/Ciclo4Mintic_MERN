@@ -1,11 +1,11 @@
 //redux para el sitio web 
-import { createStore, combineReducers, applyMiddleware} from 'redux';
+import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
-import { composeWithDevTools} from 'redux-devtools-extension';
-import { productsReducer, productDetailsReducer, newProductReducer, productReducer, newReviewReducer} from './reducer/productReducer';
-import { authReducer,userReducer, forgotPasswordReducer } from './reducer/userReducer';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import { productsReducer, productDetailsReducer, newProductReducer, productReducer, newReviewReducer } from './reducer/productReducer';
+import { authReducer, userReducer, forgotPasswordReducer } from './reducer/userReducer'
 import { cartReducer } from './reducer/cartReducer';
-import { myOrdersReducer, newOrderReducer, orderDetailsReducer  } from './reducer/orderReducer';
+import { myOrdersReducer, newOrderReducer, orderDetailsReducer } from './reducer/orderReducer';
 
 
 const reducer = combineReducers ({

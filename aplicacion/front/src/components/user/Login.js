@@ -2,27 +2,27 @@ import React, { Fragment, useEffect, useState } from 'react'
 import MetaData from '../layout/MetaData'
 import { Link, useNavigate } from "react-router-dom"
 import { login, clearErrors } from "../../actions/userActions"
-import { useDispatch, useSelector } from 'react-redux' //para usar el dispatch y el useSelector
+import { useDispatch, useSelector } from 'react-redux'
 
 export const Login = () => {
     const navigate = useNavigate();
-    const [email, setEmail] = useState("") //cambiar los estados de las variables que por defectos estan vacias
-    const [password, setPassword] = useState("")//cambiar los estados de las variables que por defectos estan vacias 
-    const dispatch = useDispatch(); //para usar el dispatch
-    const { isAuthenticated, error, loading } = useSelector(state => state.auth) //traemos la información del estado de auth
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const dispatch = useDispatch();
+    const { isAuthenticated, error, loading } = useSelector(state => state.auth)
 
-    useEffect(() => { //que va a hacer cuando autentique que va a depnder del estado de isAuthenticated
+    useEffect(() => {
         if (isAuthenticated) {
             navigate("/")
         }
         if (error) {
             dispatch(clearErrors)
         }
-    }, [dispatch, isAuthenticated, error]) //debe enviar datos de regreso para que funcione 
+    }, [dispatch, isAuthenticated, error])
 
-    const submitHandler = (e) => { //funcion para enviar los datos del formulario a la base de datos 
-        e.preventDefault(); //para que no se recargue la pagina
-        dispatch(login(email, password)) //dispatch para enviar los datos al back, despacho la acción de login con los datos del email y el password
+    const submitHandler = (e) => {
+        e.preventDefault();
+        dispatch(login(email, password))
     }
 
     return (
@@ -32,7 +32,7 @@ export const Login = () => {
                     <MetaData title={"Inicie Sesión"} />
                     <div className='row wrapper'>
                         <div className='col-10 col-lg-5'>
-                            <form className='shadow-lg' onSubmit={submitHandler}> {/*cuando se envie el formulario se ejecuta el submitHandler*/}
+                            <form className='shadow-lg' onSubmit={submitHandler}>
                                 <h1 className='mb-3'>Inicio de Sesión</h1>
                                 {/*Campo para email*/}
                                 <div className='form-group'>
@@ -41,7 +41,7 @@ export const Login = () => {
                                         id="email_field"
                                         className='form-control'
                                         value={email}
-                                        onChange={(e) => setEmail(e.target.value)}></input> {/*cada vez que se cambie el valor del input se va a cambiar el estado de la variable email*/}
+                                        onChange={(e) => setEmail(e.target.value)}></input>
                                 </div>
                                 {/*Campo para contraseña*/}
                                 <div className='form-group'>
@@ -50,7 +50,7 @@ export const Login = () => {
                                         id="password_field"
                                         className='form-control'
                                         value={password}
-                                        onChange={(e) => setPassword(e.target.value)}  
+                                        onChange={(e) => setPassword(e.target.value)}
                                     ></input>
                                 </div>
 
