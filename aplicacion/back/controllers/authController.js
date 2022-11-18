@@ -231,7 +231,7 @@ exports.udptateUser = catchAsyncErrors (async (req, res, next) => { //recibe 3 p
     const nuevaData ={
         nombre: req.body.nombre,
         email: req.body.email, //lo que esta en el body
-        role: req.body.rol
+        role: req.body.role
     }; //creo un objeto vacio para ir agregando la informacion que viene en el req body
 
     const user = await User.findByIdAndUpdate(req.params.id, nuevaData, { //del params id que viene de la url
